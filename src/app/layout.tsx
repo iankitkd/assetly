@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 // import "./globals.css";
 
 import Providers from "@/src/app/providers";
+import Header from "@/src/components/layout/Header";
+import Footer from "@/src/components/layout/Footer";
+import { Box, Container } from "@mui/material";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,7 +15,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Assetly",
-  description: "A market place for digital products.",
+  description: "A marketplace for high-quality digital assets created by professionals.",
 };
 
 export default function RootLayout({
@@ -24,7 +27,22 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         <Providers>
-          {children}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              minHeight: "100vh",
+            }}
+          >
+            <Header />
+
+            <Container maxWidth="lg" component="main" sx={{ flexGrow: 1 }}>
+              {children}
+            </Container>
+
+            <Footer />
+          </Box>
+
         </Providers>
       </body>
     </html>

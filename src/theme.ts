@@ -6,7 +6,7 @@ const theme = createTheme({
       main: "#4F46E5", // Indigo
     },
     secondary: {
-      main: "#6366F1", // Soft accent
+      main: "#F59E0B", // Amber
     },
     background: {
       default: "#F9FAFB",
@@ -19,6 +19,10 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: "Inter, system-ui, -apple-system, sans-serif",
+  },
+
+  shape: {
+    borderRadius: 8,
   },
 });
 
