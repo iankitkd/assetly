@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   AppBar,
   Toolbar,
@@ -9,10 +10,8 @@ import {
   InputBase,
   Container,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import Link from "next/link";
 
-import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
+import { LayersOutlined, Search } from "@mui/icons-material";
 import { APP_NAME } from "@/data";
 
 
@@ -33,7 +32,7 @@ export default function Header() {
               textDecoration: "none",
             }}
           >
-            <LayersOutlinedIcon sx={{ fontSize: 28 }} />
+            <LayersOutlined sx={{ fontSize: 28 }} />
 
             <Typography
               sx={{
@@ -64,7 +63,7 @@ export default function Header() {
               py: 0.5,
             }}
           >
-            <SearchIcon sx={{ mr: 1 }} />
+            <Search sx={{ mr: 1 }} />
             <InputBase
               placeholder="Search assets…"
               sx={{
@@ -81,7 +80,7 @@ export default function Header() {
               component={Link} 
               href="/login"
             >
-              Login
+              Sign in
             </Button>
 
             <Button

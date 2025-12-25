@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Box,
   Button,
@@ -15,38 +16,64 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import AuthFormWrapper from "@/components/auth/AuthFormWrapper";
+import FormSuccess from "@/components/shared/FormSuccess";
+import FormError from "@/components/shared/FormError";
 
 import { useForm } from "react-hook-form";
 import { signupSchema, SignupValues } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { signIn } from "next-auth/react";
+import { signup } from "@/actions/signup";
+import { DEFAULT_SIGNIN_REDIRECT } from "@/routes";
 import { roles } from "@/data";
 
-type Role = "user" | "seller";
+type Role = "USER" | "SELLER";
 
 export default function SignupForm() {
+  const [role, setRole] = useState<Role>("USER");
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState<Role>("user");
+  const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  const router = useRouter();
+  const params = useSearchParams();
+  const callbackUrl = params?.get('callbackUrl');
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    setValue,
+    formState: { errors },
   } = useForm<SignupValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      role: "USER",
     },
   });
 
-  const onSubmit = async (data: SignupValues) => {
-    await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      callbackUrl: "/",
-    });
+  const signupHandler = async (values: SignupValues) => {
+    setError("");
+    setSuccess("");
+    setIsLoading(true);
+    try {
+      // values = {...values, role: role};
+      const res = await signup(values);
+      if(res.success) {
+        setSuccess(res.message);
+        router.push(callbackUrl || DEFAULT_SIGNIN_REDIRECT);
+      } else {
+        setError(res.message);
+      }
+    } catch (error) {
+      setError("Something went wrong!");
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -59,7 +86,7 @@ export default function SignupForm() {
       backButtonHref="/login"
     >
       {/* Email Password Form */}
-      <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+      <Box component="form" onSubmit={handleSubmit(signupHandler)}>
         {/* Role selection */}
         <Grid container spacing={2} mb={1}>
           {roles.map((item) => (
@@ -71,7 +98,10 @@ export default function SignupForm() {
                   bgcolor: role === item.id ? 'primary.light' : 'background.paper',
                 }}
               >
-                <CardActionArea onClick={() => setRole(item.id as Role)}>
+                <CardActionArea onClick={() => {
+                  setRole(item.id as Role); 
+                  setValue("role", item.id as Role);}}
+                >
                   <Box p={2} textAlign="center">
                     <Typography fontWeight={600}>
                       {item.title}
@@ -138,12 +168,15 @@ export default function SignupForm() {
           }}
         />
 
+        {success && <FormSuccess message={success} />}
+        {error && <FormError message={error} />}
+
         <Button
           type="submit"
           fullWidth
           variant="contained"
           size="large"
-          disabled={isSubmitting}
+          disabled={isLoading}
           sx={{
             mt: 3,
             py: 1.2,
@@ -151,7 +184,7 @@ export default function SignupForm() {
             textTransform: "none",
           }}
         >
-          {isSubmitting ? "Registering..." : `Register as ${role === 'user' ? 'user' : 'Seller'}`}
+          {isLoading ? "Registering..." : `Register as ${role === 'USER' ? 'user' : 'Seller'}`}
         </Button>
       </Box>
     </AuthFormWrapper>

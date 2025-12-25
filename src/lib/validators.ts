@@ -10,6 +10,7 @@ export const signupSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
   email: z.email("Please enter a valid email"),
   password: z.string().min(8, "Password must be at least 8 characters"),
+  role: z.enum(["USER", "SELLER"]),
 });
 
 export type LoginValues = z.infer<typeof loginSchema>;

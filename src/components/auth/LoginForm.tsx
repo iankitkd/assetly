@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Box,
   Button,
@@ -10,23 +11,33 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@/components/icons";
 
 import AuthFormWrapper from "@/components/auth/AuthFormWrapper";
+import FormSuccess from "@/components/shared/FormSuccess";
+import FormError from "@/components/shared/FormError";
 
 import { useForm } from "react-hook-form";
 import { loginSchema, LoginValues } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { signIn } from "next-auth/react";
+import { login } from "@/actions/login";
+import { DEFAULT_SIGNIN_REDIRECT } from "@/routes";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  const router = useRouter();
+  const params = useSearchParams();
+  const callbackUrl = params?.get('callbackUrl');
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -35,12 +46,24 @@ export default function LoginForm() {
     },
   });
 
-  const onSubmit = async (data: LoginValues) => {
-    await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      callbackUrl: "/",
-    });
+  const loginHandler = async (values: LoginValues) => {
+    setError("");
+    setSuccess("");
+    setIsLoading(true);
+    try {
+      const res = await login(values);
+      if(res.success) {
+        setSuccess(res.message);
+        router.push(callbackUrl || DEFAULT_SIGNIN_REDIRECT);
+      } else {
+        setError(res.message);
+      }
+    } catch (error) {
+      setError("Something went wrong!");
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -53,7 +76,7 @@ export default function LoginForm() {
       backButtonHref="/signup"
     >
       {/* Email Password Form */}
-      <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+      <Box component="form" onSubmit={handleSubmit(loginHandler)}>
         <TextField
           variant="standard"
           label="Email"
@@ -113,12 +136,15 @@ export default function LoginForm() {
           </MuiLink>
         </Box>
 
+        {success && <FormSuccess message={success} />}
+        {error && <FormError message={error} />}
+
         <Button
           type="submit"
           fullWidth
           variant="contained"
           size="large"
-          disabled={isSubmitting}
+          disabled={isLoading}
           sx={{
             mt: 3,
             py: 1.2,
@@ -126,7 +152,7 @@ export default function LoginForm() {
             textTransform: "none",
           }}
         >
-          {isSubmitting ? "Signing in..." : "Sign In"}
+          {isLoading ? "Signing in..." : "Sign In"}
         </Button>
       </Box>
     </AuthFormWrapper>
