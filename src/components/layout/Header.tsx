@@ -13,6 +13,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Link from "next/link";
 
 import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
+import { APP_NAME } from "@/data";
 
 
 export default function Header() {
@@ -41,7 +42,7 @@ export default function Header() {
                 typography: {xs: 'h6', md: 'h5'}
               }}
             >
-              Assetly
+              {APP_NAME}
             </Typography>
           </Box>
 

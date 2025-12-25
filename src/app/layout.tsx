@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 // import "./globals.css";
 
-import Providers from "@/src/app/providers";
-import Header from "@/src/components/layout/Header";
-import Footer from "@/src/components/layout/Footer";
+import Providers from "@/app/providers";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import { Box, Container } from "@mui/material";
 
 const inter = Inter({
@@ -36,7 +36,7 @@ export default function RootLayout({
           >
             <Header />
 
-            <Container maxWidth="lg" component="main" sx={{ flexGrow: 1 }}>
+            <Container maxWidth="lg" component="main" sx={{ flexGrow: 1, p: 0, }}>
               {children}
             </Container>
 

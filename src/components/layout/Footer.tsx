@@ -1,5 +1,6 @@
 "use client";
 
+import { APP_NAME } from "@/data";
 import {
   Box,
   Container,
@@ -26,7 +27,7 @@ export default function Footer() {
           {/* Brand */}
           <Grid size={{ xs: 12, sm: 4 }}>
             <Typography variant="h6" gutterBottom>
-              Assetly
+              {APP_NAME}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               A marketplace for high-quality digital assets created by
@@ -79,7 +80,7 @@ export default function Footer() {
           }}
         >
           <Typography variant="body2" color="text.secondary">
-            © {new Date().getFullYear()} Assetly. All rights reserved.
+            © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
           </Typography>
         </Box>
       </Container>
