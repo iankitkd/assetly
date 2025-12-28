@@ -3,7 +3,7 @@ import { GoogleIcon } from '@/components/icons';
 
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { DEFAULT_SIGNIN_REDIRECT } from "@/routes";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export default function Socials() {
   const searchParams = useSearchParams();
@@ -11,7 +11,7 @@ export default function Socials() {
 
   const handleClick = (provider: "google" | "github") => {
     signIn(provider, {
-      redirectTo: callbackUrl || DEFAULT_SIGNIN_REDIRECT,
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
   };
 

@@ -1,25 +1,34 @@
-"use client"
+"use client";
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
+import { redirect, useSearchParams } from 'next/navigation';
 import LoginForm from '@/components/auth/LoginForm'
 import ModalWrapper from '@/components/shared/ModalWrapper'
-import AuthErrorAlert from '@/components/shared/ErrorAlert';
+import ErrorAlert from '@/components/shared/ErrorAlert';
 import { authErrorMap } from '@/utils/authErrors';
 
+
 export default function page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginPage />
+    </Suspense>
+  )
+}
+
+function LoginPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   let error = searchParams.get("error");
   if(error) error = authErrorMap[error] ?? "Authentication failed. Please try again.";
 
   return (
     <>
       {error ? (
-        <ModalWrapper>
-          <AuthErrorAlert 
+        <ModalWrapper allowClose={false}>
+          <ErrorAlert 
             error={error} 
             showRetry={true}
-            onRetry={() => router.push('/login')} 
+            onRetry={() => redirect('/login')} 
           />
         </ModalWrapper>
       ): (

@@ -24,13 +24,14 @@ import { signupSchema, SignupValues } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { signup } from "@/actions/signup";
-import { DEFAULT_SIGNIN_REDIRECT } from "@/routes";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { roles } from "@/data";
+import { RoleType } from "@/types";
 
-type Role = "USER" | "SELLER";
+const INITIAL_ROLE = "USER";
 
 export default function SignupForm() {
-  const [role, setRole] = useState<Role>("USER");
+  const [role, setRole] = useState<RoleType>(INITIAL_ROLE);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState("");
@@ -51,7 +52,7 @@ export default function SignupForm() {
       name: "",
       email: "",
       password: "",
-      role: "USER",
+      role: INITIAL_ROLE,
     },
   });
 
@@ -60,11 +61,11 @@ export default function SignupForm() {
     setSuccess("");
     setIsLoading(true);
     try {
-      // values = {...values, role: role};
+      values = {...values, role: role};
       const res = await signup(values);
       if(res.success) {
         setSuccess(res.message);
-        router.push(callbackUrl || DEFAULT_SIGNIN_REDIRECT);
+        router.push(callbackUrl || DEFAULT_LOGIN_REDIRECT);
       } else {
         setError(res.message);
       }
@@ -99,8 +100,8 @@ export default function SignupForm() {
                 }}
               >
                 <CardActionArea onClick={() => {
-                  setRole(item.id as Role); 
-                  setValue("role", item.id as Role);}}
+                  setRole(item.id as RoleType); 
+                  setValue("role", item.id as RoleType);}}
                 >
                   <Box p={2} textAlign="center">
                     <Typography fontWeight={600}>

@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation";
 
 interface ModalWrapperProps {
   children: React.ReactNode;
+  allowClose?: boolean;
 }
 
-export default function ModalWrapper({ children }: ModalWrapperProps) {
+export default function ModalWrapper({ children, allowClose=true }: ModalWrapperProps) {
   const router = useRouter();
 
   const handleClose = () => {
-    router.back(); // go back to previous page
+    if(allowClose) router.back(); // go back to previous page
   };
 
   return (

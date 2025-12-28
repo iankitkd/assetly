@@ -22,7 +22,7 @@ import { loginSchema, LoginValues } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { login } from "@/actions/login";
-import { DEFAULT_SIGNIN_REDIRECT } from "@/routes";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -54,7 +54,7 @@ export default function LoginForm() {
       const res = await login(values);
       if(res.success) {
         setSuccess(res.message);
-        router.push(callbackUrl || DEFAULT_SIGNIN_REDIRECT);
+        router.push(callbackUrl || DEFAULT_LOGIN_REDIRECT);
       } else {
         setError(res.message);
       }

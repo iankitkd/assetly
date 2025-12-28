@@ -1,4 +1,27 @@
-export const DEFAULT_SIGNIN_REDIRECT = "/home";
+export const DEFAULT_LOGIN_REDIRECT = "/home";
 export const apiAuthPrefix = "/api/auth";
 export const authRoutes = ["/login", "/signup"];
-export const publicRoutes = ["/", "/home", "/about", "/login", "/signup"];
+
+export const publicRoutes = [
+  "/",
+  "/home", 
+  "/about", 
+  "/login", 
+  "/signup",
+];
+
+export const protectedRoutes = [
+  "/dashboard",     // Common dashboard
+  "/profile",
+  "/settings",
+  "/orders",
+  "/library",
+];
+
+export const sellerRoutes = [
+  "/seller",
+  "/seller/dashboard",
+  "/seller/assets",
+  "/seller/upload",
+  "/seller/earnings",
+];
