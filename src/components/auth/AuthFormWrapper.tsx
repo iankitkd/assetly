@@ -29,6 +29,8 @@ export default function AuthFormWrapper({
         width: "100%",
         minWidth: 360,
         maxWidth: 420,
+        mx: "auto",
+        my: 2,
         p: 4,
         borderRadius: 2,
         border: "1px solid",

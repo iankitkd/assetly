@@ -11,7 +11,7 @@ import {
   Container,
 } from "@mui/material";
 
-import { LayersOutlined, Search } from "@mui/icons-material";
+import { LayersOutlinedIcon, SearchIcon } from "@/components/icons";
 import { APP_NAME } from "@/data";
 
 
@@ -32,7 +32,7 @@ export default function Header() {
               textDecoration: "none",
             }}
           >
-            <LayersOutlined sx={{ fontSize: 28 }} />
+            <LayersOutlinedIcon sx={{ fontSize: 28 }} />
 
             <Typography
               sx={{
@@ -63,7 +63,7 @@ export default function Header() {
               py: 0.5,
             }}
           >
-            <Search sx={{ mr: 1 }} />
+            <SearchIcon sx={{ mr: 1 }} />
             <InputBase
               placeholder="Search assets…"
               sx={{

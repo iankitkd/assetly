@@ -1,14 +1,15 @@
 import { SvgIcon } from "@mui/material";
 
-import { LayersOutlined, Search, Visibility, VisibilityOff, ErrorOutline, CheckCircleOutline } from "@mui/icons-material";
+import { LayersOutlined, Search, Visibility, VisibilityOff, ErrorOutline, CheckCircleOutline, CloudUpload } from "@mui/icons-material";
 
 export {
-  LayersOutlined,
-  Search,
-  Visibility,
-  VisibilityOff,
-  CheckCircleOutline,
-  ErrorOutline,
+  LayersOutlined as LayersOutlinedIcon,
+  Search as SearchIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon,
+  CheckCircleOutline as CheckCircleOutlineIcon,
+  ErrorOutline as ErrorOutlineIcon,
+  CloudUpload as CloudUploadIcon,
 }
 
 export function GoogleIcon() {

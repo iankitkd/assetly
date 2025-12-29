@@ -1,4 +1,4 @@
-import { CheckCircleOutline } from "@/components/icons";
+import { CheckCircleOutlineIcon } from "@/components/icons";
 import { Box, Typography } from "@mui/material";
 
 interface FormSuccessProps {
@@ -20,7 +20,7 @@ const FormSuccess = ({ message }: FormSuccessProps) => {
         color: "success.main",
       }}
     >
-      <CheckCircleOutline
+      <CheckCircleOutlineIcon
         fontSize="small"
         sx={{ color: "success.main" }}
       />

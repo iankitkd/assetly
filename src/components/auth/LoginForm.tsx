@@ -11,7 +11,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@/components/icons";
+import { VisibilityIcon, VisibilityOffIcon } from "@/components/icons";
 
 import AuthFormWrapper from "@/components/auth/AuthFormWrapper";
 import FormSuccess from "@/components/shared/FormSuccess";
@@ -110,7 +110,7 @@ export default function LoginForm() {
                     edge="end"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                   </IconButton>
                 </InputAdornment>
               ),

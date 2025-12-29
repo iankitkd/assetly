@@ -28,6 +28,7 @@ model User {
   emailVerified DateTime?
   image         String?
   accounts      Account[]
+  assets        Asset[]
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -52,4 +53,20 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
  
   @@id([provider, providerAccountId])
+}
+
+model Asset {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  price       Int
+  category    String
+  subCategory String
+  previewUrl  String
+  fileUrl     String
+
+  sellerId    String
+  seller      User     @relation(fields: [sellerId], references: [id])
+
+  createdAt   DateTime @default(now())
 }

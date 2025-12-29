@@ -1,4 +1,4 @@
-import { ErrorOutline } from "@/components/icons";
+import { ErrorOutlineIcon } from "@/components/icons";
 import { Box, Typography } from "@mui/material";
 
 interface FormErrorProps {
@@ -20,7 +20,7 @@ const FormError = ({ message }: FormErrorProps) => {
         color: "error.main",
       }}
     >
-      <ErrorOutline
+      <ErrorOutlineIcon
         fontSize="small"
         sx={{ color: "error.main" }}
       />
