@@ -58,7 +58,7 @@ model Account {
 model Asset {
   id          String   @id @default(cuid())
   title       String
-  description String?
+  description String
   price       Int
   category    String
   subCategory String

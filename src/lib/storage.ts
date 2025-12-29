@@ -1,0 +1,19 @@
+"use server"
+
+import { supabase } from "@/lib/supabase";
+
+export const uploadFile = async (bucket: string, path: string, file: File) => {
+  const { error } = await supabase.storage
+    .from(bucket)
+    .upload(path, file, { upsert: false });
+
+  if (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+};
+
+export const getPublicUrl = async (bucket: string, path: string) => {
+  const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+  return data.publicUrl;
+};

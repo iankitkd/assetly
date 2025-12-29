@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -9,6 +10,8 @@ import {
   CardHeader,
   Divider,
   MenuItem,
+  Snackbar,
+  SnackbarCloseReason,
   Stack,
   TextField,
   Typography,
@@ -19,14 +22,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ASSET_CATEGORIES } from "@/data/asset-categories";
 import { assetSchema, AssetValues } from "@/lib/validators";
-// import { uploadAsset } from "@/actions/upload-asset";
+import { uploadAsset } from "@/actions/upload-asset";
 
 export default function UploadForm() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState<{success: boolean, message: string}>();
+  const [open, setOpen] = useState(false);
+
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<AssetValues>({
     resolver: zodResolver(assetSchema),
     defaultValues: {
@@ -49,18 +56,27 @@ export default function UploadForm() {
 
 
   const onSubmit = async (values: AssetValues) => {
-    const formData = new FormData();
-    console.log(values, "values");
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
 
-    Object.entries(values).forEach(([key, value]) => {
-      if (value instanceof FileList) {
-        formData.append(key, value[0]);
-      } else {
-        formData.append(key, String(value));
-      }
-    });
+      Object.entries(values).forEach(([key, value]) => {
+        if (value instanceof FileList) {
+          formData.append(key, value[0]);
+        } else {
+          formData.append(key, String(value));
+        }
+      });
 
-    // await uploadAsset(formData);
+      
+      const res = await uploadAsset(formData);
+      setStatus({success: res.success, message: res.message});
+      setOpen(true);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
 
@@ -221,14 +237,29 @@ export default function UploadForm() {
               type="submit"
               variant="contained"
               size="large"
-              disabled={isSubmitting}
+              disabled={isLoading}
             >
-              {isSubmitting ? "Uploading..." : "Publish Asset"}
+              {isLoading ? "Uploading..." : "Publish Asset"}
             </Button>
             
           </Stack>
         </Box>
       </CardContent>
+
+      <Snackbar 
+        open={open} 
+        autoHideDuration={5000} 
+        onClose={() => setOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          severity={status?.success ? "success" : "error"}
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {status?.message}
+        </Alert>
+      </Snackbar>
     </Card>
   );
 }
