@@ -1,9 +1,76 @@
+import { Box, Typography, Button, Card, CardContent } from "@mui/material";
+import {AddIcon} from "@/components/icons";
+import { auth } from "@/auth";
+import { getSellerAssets } from "@/actions/seller";
+import AssetsTable from "@/components/seller/AssetsTable";
+import AssetsPagination from "@/components/seller/AssetsPagination";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 
 
-export default function page() {
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+
+export default async function SellerAssetsPage(props: {searchParams: SearchParams}) {
+  const searchParams = await props.searchParams;
+  let page = Math.max(1, Number(searchParams.page) || 1);
+
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  const { assets, totalPages } = await getSellerAssets( session.user.id, page);
+
+  if(page > totalPages) {
+    redirect(`/seller/assets?page=${totalPages}`);
+  }
+
   return (
-    <div>
-      
-    </div>
-  )
+    <Box>
+      {/* Header */}
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={3}
+      >
+        <Typography variant="h5" fontWeight={700}>
+          My Assets
+        </Typography>
+
+        <Button
+          href="/seller/assets/new"
+          variant="contained"
+          startIcon={<AddIcon />}
+        >
+          Upload Asset
+        </Button>
+      </Box>
+
+      {/* Table */}
+      {(assets.length === 0) ? (
+        <Card variant="outlined">
+          <CardContent>
+            <Typography fontWeight={600}>No assets yet</Typography>
+            <Typography color="text.secondary" mb={2}>
+              Upload your first asset to start selling.
+            </Typography>
+            <Button component={Link} href="/seller/assets/new" variant="contained">
+              Upload Asset
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card variant="outlined">
+          <CardContent>
+            <AssetsTable assets={assets} />
+          </CardContent>
+        </Card>
+      )}
+
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <AssetsPagination page={page} totalPages={totalPages} />
+      )}
+    </Box>
+  );
 }

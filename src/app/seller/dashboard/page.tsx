@@ -3,7 +3,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import RecentAssetsTable from "@/components/seller/RecentAssetTable";
 import StatsCard from "@/components/seller/StatsCard";
 import { auth } from "@/auth";
-import { getRecentAssetsBySeller } from "@/actions/asset";
+import { getRecentAssetsBySeller } from "@/actions/seller";
 
 export default async function page() {
   const session = await auth();

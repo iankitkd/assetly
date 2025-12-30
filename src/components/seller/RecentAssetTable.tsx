@@ -1,19 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import {
   Box,
   Card,
   CardContent,
   Typography,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Chip,
   Button,
 } from "@mui/material";
-import Link from "next/link";
+import AssetsTable from "@/components/seller/AssetsTable";
 
 interface Asset {
   id: string;
@@ -39,43 +34,7 @@ export default function RecentAssetsTable({ assets }: { assets: Asset[] }) {
             No assets uploaded yet.
           </Typography>
         ) : (
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>Sales</TableCell>
-                <TableCell align="right">Action</TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {assets.map((asset) => (
-                <TableRow key={asset.id}>
-                  <TableCell>{asset.title}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={asset.category}
-                      size="small"
-                      color="default"
-                    />
-                  </TableCell>
-                  <TableCell>₹{asset.price}</TableCell>
-                  <TableCell>{asset.salesCount}</TableCell>
-                  <TableCell align="right">
-                    <Button
-                      component={Link}
-                      href={`/seller/assets/${asset.id}`}
-                      size="small"
-                    >
-                      View
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <AssetsTable assets={assets} />
         )}
       </CardContent>
     </Card>
