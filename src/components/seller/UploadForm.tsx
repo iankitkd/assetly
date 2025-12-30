@@ -11,7 +11,6 @@ import {
   Divider,
   MenuItem,
   Snackbar,
-  SnackbarCloseReason,
   Stack,
   TextField,
   Typography,
@@ -67,7 +66,6 @@ export default function UploadForm() {
           formData.append(key, String(value));
         }
       });
-
       
       const res = await uploadAsset(formData);
       setStatus({success: res.success, message: res.message});
@@ -81,7 +79,7 @@ export default function UploadForm() {
 
 
   return (
-    <Card sx={{ maxWidth: 760, mx: "auto", mt: 4, borderRadius: 3 }}>
+    <Card sx={{ maxWidth: 760, mx: "auto", borderRadius: 3 }}>
       <CardHeader
         title={<Typography fontWeight={700}>Upload New Asset</Typography>}
         subheader="Add a digital product to sell on Assetly"
