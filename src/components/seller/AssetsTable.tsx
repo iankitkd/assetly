@@ -44,7 +44,7 @@ export default function AssetsTable({ assets }: { assets: Asset[] }) {
             <TableCell align="right">
               <Button
                 component={Link}
-                href={`/seller/assets/${asset.id}`}
+                href={`/assets/${asset.id}`}
                 size="small"
               >
                 View

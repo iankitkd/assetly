@@ -3,7 +3,8 @@ import { SvgIcon } from "@mui/material";
 import { 
   LayersOutlined, Search, Visibility, VisibilityOff, 
   ErrorOutline, CheckCircleOutline, CloudUpload, 
-  Dashboard, Inventory, AddBox, Add,
+  Dashboard, Inventory, AddBox, Add, Download,
+  ShoppingBag, ShoppingCart
 } from "@mui/icons-material";
 
 export {
@@ -18,6 +19,10 @@ export {
   Inventory as InventoryIcon,
   AddBox as AddBoxIcon,
   Add as AddIcon,
+  Download as DownloadIcon,
+  ShoppingBag as ShoppingBagIcon,
+  ShoppingCart as ShoppingCartIcon,
+
 }
 
 export function GoogleIcon() {

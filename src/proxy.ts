@@ -13,8 +13,8 @@ export default auth((req) => {
   // console.log(user, "user")
 
   const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutes.includes(pathname);
   const isAuthRoute = authRoutes.includes(pathname);
+  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
   const isSellerRoute = sellerRoutes.some((route) => pathname.startsWith(route));
   const isOnboardingRoute = pathname.startsWith("/onboarding");
 

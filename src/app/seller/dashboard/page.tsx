@@ -1,7 +1,7 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Grid, Typography } from "@mui/material";
 
-import RecentAssetsTable from "@/components/seller/RecentAssetTable";
 import StatsCard from "@/components/seller/StatsCard";
+import AssetsTable from "@/components/seller/AssetsTable";
 import { auth } from "@/auth";
 import { getRecentAssetsBySeller } from "@/actions/seller";
 
@@ -38,7 +38,24 @@ export default async function page() {
       </Grid>
 
       {/* Recent Assets */}
-      <RecentAssetsTable assets={assets} />
+      <Card variant="outlined">
+        <CardContent>
+          <Box display="flex" justifyContent="space-between" mb={2}>
+            <Typography fontWeight={600}>Recent Assets</Typography>
+            <Button href="/seller/assets" size="small">
+              View All
+            </Button>
+          </Box>
+
+          {assets.length === 0 ? (
+            <Typography color="text.secondary">
+              No assets uploaded yet.
+            </Typography>
+          ) : (
+            <AssetsTable assets={assets} />
+          )}
+        </CardContent>
+      </Card>
     </Box>
   );
 }

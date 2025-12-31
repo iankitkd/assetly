@@ -4,10 +4,11 @@ export const authRoutes = ["/login", "/signup"];
 
 export const publicRoutes = [
   "/",
-  "/home", 
+  "/discover", 
   "/about", 
   "/login", 
   "/signup",
+  "/assets"
 ];
 
 export const protectedRoutes = [
