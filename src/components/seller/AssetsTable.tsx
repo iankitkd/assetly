@@ -11,13 +11,8 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 
-interface Asset {
-  id: string;
-  title: string;
-  category: string;
-  price: number;
-  salesCount: number;
-}
+import { Asset } from "@/types";
+import { ASSET_CATEGORIES } from "@/data/asset-categories";
 
 export default function AssetsTable({ assets }: { assets: Asset[] }) {
   return (
@@ -37,7 +32,7 @@ export default function AssetsTable({ assets }: { assets: Asset[] }) {
           <TableRow key={asset.id}>
             <TableCell>{asset.title}</TableCell>
             <TableCell>
-              <Chip label={asset.category} size="small" color="default" />
+              <Chip label={ASSET_CATEGORIES[asset.category].label} size="small" color="default" />
             </TableCell>
             <TableCell>₹{asset.price}</TableCell>
             <TableCell>{asset.salesCount}</TableCell>

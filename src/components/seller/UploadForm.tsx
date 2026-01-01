@@ -19,7 +19,7 @@ import {CloudUploadIcon} from "@/components/icons";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { ASSET_CATEGORIES } from "@/data/asset-categories";
+import { ASSET_CATEGORIES_LIST } from "@/data/asset-categories";
 import { assetSchema, AssetValues } from "@/lib/validators";
 import { uploadAsset } from "@/actions/upload-asset";
 
@@ -49,7 +49,7 @@ export default function UploadForm() {
   const assetFileName = watch("assetFile")?.[0]?.name;
 
   const selectedCategory = useMemo(
-    () => ASSET_CATEGORIES.find((c) => c.id === mainCategory),
+    () => ASSET_CATEGORIES_LIST.find((c) => c.id === mainCategory),
     [mainCategory]
   );
 
@@ -131,7 +131,7 @@ export default function UploadForm() {
                 <MenuItem value="" disabled>
                   Select a category
                 </MenuItem>
-                {ASSET_CATEGORIES.map((cat) => (
+                {ASSET_CATEGORIES_LIST.map((cat) => (
                   <MenuItem key={cat.id} value={cat.id}>
                     {cat.label}
                   </MenuItem>
@@ -150,7 +150,7 @@ export default function UploadForm() {
                 <MenuItem value="" disabled>
                   Select a subcategory
                 </MenuItem>
-                {selectedCategory?.subcategories.map((sub) => (
+                {selectedCategory?.subCategories.map((sub) => (
                   <MenuItem key={sub.id} value={sub.id}>
                     {sub.label}
                   </MenuItem>
