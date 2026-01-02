@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Box, Button, Paper, Popper, Stack } from "@mui/material";
+import { Box, Button, Paper, Popper, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { ASSET_CATEGORIES_LIST } from "@/data/asset-categories";
 import { CategoryInList } from "@/types";
 
@@ -11,6 +11,9 @@ export default function CategoryBar() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const activeCategory = searchParams.get("category");
   const activeSubcategory = searchParams.get("subcategory");
@@ -31,20 +34,25 @@ export default function CategoryBar() {
     router.push(`${pathname}?${sp.toString()}`);
   };
 
+  if(isMobile) {
+    return null;
+  }
+
   return (
     <Box
       sx={{
         py: 1,
-        // position: "relative",
         overflowX: "auto",
+        borderBottom: "1px solid",
+        borderColor: "divider",
       }}
     >
       <Stack direction="row" spacing={1.5} alignItems="center">
-        {/* ALL */}
+        {/* all */}
         <Button
           variant={!activeCategory ? "contained" : "text"}
           size="large"
-          onClick={() => updateParams({ category: null, subcategory: null })}
+          onClick={() => updateParams({ category: null, subCategory: null })}
           onMouseEnter={() => setAnchorEl(null)}
           sx={{ 
             borderRadius: 8, 
@@ -55,6 +63,7 @@ export default function CategoryBar() {
           All
         </Button>
 
+        {/*category  */}
         {ASSET_CATEGORIES_LIST.map((cat) => (
           <Button
             key={cat.id}
@@ -70,14 +79,14 @@ export default function CategoryBar() {
               setAnchorEl(e.currentTarget);
               setCurrCategory(cat);
             }}
-            onClick={() => updateParams({ category: cat.id, subcategory: null })}
+            onClick={() => updateParams({ category: cat.id, subCategory: null })}
           >
             {cat.label}
           </Button>
         ))}
       </Stack>
 
-      {/* SUBCATEGORY POPPER */}
+      {/* subCategory */}
       <Popper
         open={open}
         anchorEl={anchorEl}
@@ -101,7 +110,7 @@ export default function CategoryBar() {
                 key={sub.id}
                 fullWidth
                 onClick={() => {
-                  updateParams({ category: currCategory.id,  subcategory: sub.id });
+                  updateParams({ category: currCategory.id,  subCategory: sub.id });
                   setAnchorEl(null);
                 }}
                 size="large"

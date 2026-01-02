@@ -21,6 +21,7 @@ export async function getSellerAssets(
         category: true,
         price: true,
         salesCount: true,
+        previewUrl: true,
       },
     }),
 
@@ -47,6 +48,7 @@ export async function getRecentAssetsBySeller(sellerId: string) {
       price: true,
       category: true,
       salesCount: true,
+      previewUrl: true,
     },
   });
 }

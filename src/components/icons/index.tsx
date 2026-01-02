@@ -4,7 +4,8 @@ import {
   LayersOutlined, Search, Visibility, VisibilityOff, 
   ErrorOutline, CheckCircleOutline, CloudUpload, 
   Dashboard, Inventory, AddBox, Add, Download,
-  ShoppingBag, ShoppingCart
+  ShoppingBag, ShoppingCart, Sort, Tune, ClearAll,
+  CurrencyRupee,
 } from "@mui/icons-material";
 
 export {
@@ -22,7 +23,10 @@ export {
   Download as DownloadIcon,
   ShoppingBag as ShoppingBagIcon,
   ShoppingCart as ShoppingCartIcon,
-
+  CurrencyRupee as CurrencyRupeeIcon,
+  Sort as SortIcon,
+  Tune as TuneIcon,
+  ClearAll as ClearAllIcon,
 }
 
 export function GoogleIcon() {

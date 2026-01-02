@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { ShoppingBagIcon, ShoppingCartIcon, DownloadIcon } from "@/components/icons";
+import { ASSET_CATEGORIES } from "@/data/asset-categories";
 
 type Props = {
   asset: any;
@@ -65,8 +66,8 @@ export default function AssetDetails({
           </Typography>
 
           <Stack direction="row"  spacing={1} mt={2}>
-            <Chip label={asset.category} />
-            <Chip label={asset.subCategory} />
+            <Chip label={ASSET_CATEGORIES[asset.category].label} />
+            <Chip label={ASSET_CATEGORIES[asset.category].subCategories[asset.subCategory].label} />
           </Stack>
 
           <Typography
