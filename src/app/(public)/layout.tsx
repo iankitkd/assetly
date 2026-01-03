@@ -2,8 +2,13 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Box, Container } from "@mui/material";
+import { auth } from "@/auth";
 
-export default function PublicLayout({ children }: Readonly<{children: React.ReactNode}>) {
+export default async function PublicLayout({ children }: Readonly<{children: React.ReactNode}>) {
+  const session = await auth();
+  const isLoggedIn = !!session;
+  const role = session?.user?.role;
+
   return (
     <Box
       sx={{
@@ -12,10 +17,13 @@ export default function PublicLayout({ children }: Readonly<{children: React.Rea
         minHeight: "100vh",
       }}
     >
-      <Header />
+      <Header
+        isLoggedIn={isLoggedIn}
+        role={role}
+      />
 
       <Container
-        maxWidth="lg"
+        maxWidth="xl"
         component="main"
         sx={{ flexGrow: 1, p: 0, minHeight: "100vh" }}
       >

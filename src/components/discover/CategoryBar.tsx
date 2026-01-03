@@ -40,10 +40,11 @@ export default function CategoryBar() {
 
   return (
     <Box
+      onMouseLeave={() => setAnchorEl(null)}
       sx={{
         py: 1,
         overflowX: "auto",
-        borderBottom: "1px solid",
+        // borderBottom: "1px solid",
         borderColor: "divider",
       }}
     >

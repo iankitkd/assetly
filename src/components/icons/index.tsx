@@ -5,7 +5,7 @@ import {
   ErrorOutline, CheckCircleOutline, CloudUpload, 
   Dashboard, Inventory, AddBox, Add, Download,
   ShoppingBag, ShoppingCart, Sort, Tune, ClearAll,
-  CurrencyRupee,
+  CurrencyRupee, Menu, Login, Sell,
 } from "@mui/icons-material";
 
 export {
@@ -27,6 +27,9 @@ export {
   Sort as SortIcon,
   Tune as TuneIcon,
   ClearAll as ClearAllIcon,
+  Menu as MenuIcon,
+  Login as LoginIcon,
+  Sell as SellIcon,
 }
 
 export function GoogleIcon() {

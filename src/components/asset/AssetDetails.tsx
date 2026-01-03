@@ -30,7 +30,7 @@ export default function AssetDetails({
 
   return (
     <Box sx={{ maxWidth: 1200, mx: "auto", py: 5, px: 2 }}>
-      <Stack direction={{ xs: "column", md: "row" }} spacing={4}>
+      <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
         {/* Preview */}
         <Paper
           elevation={2}
@@ -120,12 +120,12 @@ export default function AssetDetails({
         </Paper>
       </Stack>
 
-      {/* DESCRIPTION */}
+      {/* Description */}
       <Box mt={6}>
         <Typography variant="h6" fontWeight={700} mb={1}>
           Description
         </Typography>
-        <Typography color="text.secondary" lineHeight={1.7}>
+        <Typography color="text.secondary" lineHeight={1.7} sx={{ whiteSpace: "pre-line" }}>
           {asset.description}
         </Typography>
       </Box>

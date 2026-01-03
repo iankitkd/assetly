@@ -13,10 +13,7 @@ import {
 } from "@mui/material";
 import { ClearAllIcon } from "@/components/icons";
 import { ASSET_CATEGORIES_LIST } from "@/data/asset-categories";
-import { sortItems } from "@/data";
-
-const PRICE_MIN = 0;
-const PRICE_MAX = 9999;
+import { PRICE_MAX, PRICE_MIN, sortItems } from "@/data";
 
 interface MobileFiltersProps {
   category: string | null;

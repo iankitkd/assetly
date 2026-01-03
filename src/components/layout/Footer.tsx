@@ -22,7 +22,7 @@ export default function Footer() {
         borderColor: "divider",
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Grid container spacing={4} columns={12}>
           {/* Brand */}
           <Grid size={{ xs: 12, sm: 4 }}>

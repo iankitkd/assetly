@@ -18,10 +18,8 @@ import { CurrencyRupeeIcon, SortIcon, TuneIcon, ClearAllIcon } from "@/component
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import MobileFilters from "@/components/discover/MobileFilters";
-import { sortItems } from "@/data";
+import { PRICE_MAX, PRICE_MIN, sortItems } from "@/data";
 
-const PRICE_MIN = 0;
-const PRICE_MAX = 9999;
 
 export default function DiscoverFilter() {
   const router = useRouter();

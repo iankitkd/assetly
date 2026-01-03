@@ -1,99 +1,133 @@
 "use client";
 
-import Link from "next/link";
 import {
   AppBar,
   Toolbar,
-  Typography,
   Box,
-  Button,
   InputBase,
   Container,
+  IconButton,
+  Tooltip,
+  useMediaQuery,
+  Collapse,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { useState } from "react";
 
-import { LayersOutlinedIcon, SearchIcon } from "@/components/icons";
-import { APP_NAME } from "@/data";
+import { SearchIcon } from "@/components/icons";
+import HeaderActions from "@/components/layout/HeaderActions";
+import Logo from "@/components/shared/Logo";
 
+interface HeaderProps {
+  isLoggedIn?: boolean;
+  role?: "USER" | "SELLER";
+}
 
-export default function Header() {
+export default function Header({
+  isLoggedIn = false,
+  role = "USER",
+}: HeaderProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  const cartCount = 2;
+
   return (
-    <AppBar position="sticky" color="primary" elevation={1}>
+    <AppBar
+      position="sticky"
+      elevation={1}
+      sx={{
+        backgroundColor: "background.paper",
+        color: "text.primary",
+      }}
+    >
       <Toolbar>
-        <Container maxWidth="lg" sx={{display: "flex", px: 0, gap: 2, flexDirection: 'row'}}>
+        <Container
+          maxWidth="xl"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 2,
+            px: 0,
+          }}
+        >
           {/* Logo */}
-          <Box
-            component={Link}
-            href="/"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            <LayersOutlinedIcon sx={{ fontSize: 28 }} />
+          <Logo />
 
-            <Typography
-              sx={{
-                fontWeight: 600,
-                letterSpacing: "-0.3px",
-                typography: {xs: 'h6', md: 'h5'}
-              }}
-            >
-              {APP_NAME}
-            </Typography>
-          </Box>
+          {/* Desktop Search */}
+          {!isMobile && <SearchField />}
 
-
-          {/* Search */}
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              flexGrow: 1,
-              maxWidth: 420,
-              mx: 'auto',
-              backgroundColor: "rgba(255,255,255,0.15)",
-              "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.25)",
-              },
-              borderRadius: 2,
-              px: 1.5,
-              py: 0.5,
-            }}
-          >
-            <SearchIcon sx={{ mr: 1 }} />
-            <InputBase
-              placeholder="Search assets…"
-              sx={{
-                color: "inherit",
-                width: "100%",
-              }}
-            />
-          </Box>
+          {/* Mobile Search Toggle */}
+          {isMobile && (
+            <Tooltip title="Search">
+              <IconButton
+                color="inherit"
+                onClick={() => setIsSearchOpen((prev) => !prev)}
+              >
+                <SearchIcon />
+              </IconButton>
+            </Tooltip>
+          )}
 
           {/* Actions */}
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <Button 
-              color="inherit" 
-              component={Link} 
-              href="/login"
-            >
-              Sign in
-            </Button>
-
-            <Button
-              variant="contained"
-              color="secondary"
-              component={Link}
-              href="/sell"
-            >
-              Sell
-            </Button>
-          </Box>
+          <HeaderActions
+            cartCount={cartCount}
+            role={role}
+            isLoggedIn={isLoggedIn}
+            isMobile={isMobile}
+          />
         </Container>
       </Toolbar>
+
+      {/* Mobile Search Bar */}
+      {isMobile && (
+        <Collapse in={isSearchOpen}>
+          <Box sx={{ px: 2, pb: 1.5, }}>
+            <SearchField fullWidth />
+          </Box>
+        </Collapse>
+      )}
     </AppBar>
+  );
+}
+
+function SearchField({ fullWidth = false }: { fullWidth?: boolean }) {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        // flexGrow: 1,
+        width: fullWidth ? "100%" : 420,
+        mx: "auto",
+        backgroundColor: "rgba(79,70,229,0.08)", // indigo tint
+        border: "1px solid",
+        borderColor: "rgba(79,70,229,0.25)",
+        borderRadius: 2,
+        px: 1.5,
+        py: 0.75,
+        transition: "background-color 0.2s, border-color 0.2s",
+        "&:hover": {
+          backgroundColor: "rgba(79,70,229,0.12)",
+          borderColor: "rgba(79,70,229,0.35)",
+        },
+        "&:focus-within": {
+          backgroundColor: "rgba(79,70,229,0.14)",
+          borderColor: "primary.main",
+        },
+      }}
+    >
+      <SearchIcon sx={{ mr: 1, color: "primary.main" }} />
+      <InputBase
+        placeholder="Search assets..."
+        sx={{
+          width: "100%",
+          fontSize: 14,
+        }}
+      />
+    </Box>
   );
 }
