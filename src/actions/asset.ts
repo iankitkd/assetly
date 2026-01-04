@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { SortTypes } from "@/data";
 
 export interface SearchProps {
+  q?: string;
   sort?: SortTypes;
   category?: string | null;
   subCategory?: string | null;
@@ -10,6 +11,7 @@ export interface SearchProps {
 }
 
 export const getLatestAssets = async ({
+  q,
   sort = "newest",
   category,
   subCategory,
@@ -18,6 +20,17 @@ export const getLatestAssets = async ({
 }: SearchProps) => {
   /* WHERE clause */
   const where: any = {};
+
+  if (q) {
+    where.OR = [
+      {
+        title: { contains: q, mode: "insensitive", },
+      },
+      {
+        description: { contains: q, mode: "insensitive", },
+      },
+    ];
+  }
 
   if (category) {
     where.category = category;
