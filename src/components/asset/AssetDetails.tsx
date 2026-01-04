@@ -12,11 +12,16 @@ import {
 } from "@mui/material";
 import { ShoppingBagIcon, ShoppingCartIcon, DownloadIcon } from "@/components/icons";
 import { ASSET_CATEGORIES } from "@/data/asset-categories";
+import { addToCart } from "@/actions/cart";
+import { useRouter } from "next/navigation";
+import AlertSnackbar from "@/components/shared/AlertSnackbar";
+import { useState } from "react";
 
 type Props = {
   asset: any;
   isOwner: boolean;
   hasBought: boolean;
+  isInCart: boolean;
   isLoggedIn: boolean;
 };
 
@@ -24,18 +29,37 @@ export default function AssetDetails({
   asset,
   isOwner,
   hasBought,
+  isInCart,
   isLoggedIn,
 }: Props) {
   const canDownload = isOwner || hasBought;
 
+  const router = useRouter();
+  const [status, setStatus] = useState<{success: boolean, message: string}>();
+  const [open, setOpen] = useState(false);
+
+  const addToCartHandler = async () => {
+    if(isInCart) {
+      router.push("/cart");
+      return;
+    }
+
+    if(isLoggedIn) {
+      const res = await addToCart(asset.id);
+      setStatus({success: res.success, message: res.message});
+    } else{
+      // add to local storage
+      setStatus({success: true, message: "Added to Cart"});
+    }
+    setOpen(true);
+    router.refresh();
+  }
+
   return (
-    <Box sx={{ maxWidth: 1200, mx: "auto", py: 5, px: 2 }}>
+    <Box maxWidth="xl" sx={{ mx: "auto", py: 5, px: 2 }}>
       <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
         {/* Preview */}
-        <Paper
-          elevation={2}
-          sx={{ flex: 1, borderRadius: 3, overflow: "hidden" }}
-        >
+        <Paper sx={{ flex: 1, borderRadius: 3, overflow: "hidden" }}>
           <Image
             src={asset.previewUrl}
             alt={asset.title}
@@ -47,7 +71,6 @@ export default function AssetDetails({
 
         {/* Purchase Panel */}
         <Paper
-          elevation={3}
           sx={{
             width: { xs: "100%", md: 420 },
             borderRadius: 3,
@@ -88,9 +111,9 @@ export default function AssetDetails({
                 fullWidth
                 variant="contained"
                 startIcon={<ShoppingCartIcon />}
-                href={!isLoggedIn ? "/login" : undefined}
+                onClick={addToCartHandler}
               >
-                Add to Cart
+                {isInCart ? "Go to Cart" : "Add to Cart"}
               </Button>
 
               <Button
@@ -98,7 +121,7 @@ export default function AssetDetails({
                 fullWidth
                 variant="outlined"
                 startIcon={<ShoppingBagIcon />}
-                href={!isLoggedIn ? "/login" : undefined}
+                href={`/checkout/?id=${asset.id}`}
               >
                 Buy Now
               </Button>
@@ -129,6 +152,13 @@ export default function AssetDetails({
           {asset.description}
         </Typography>
       </Box>
+
+      <AlertSnackbar
+        open={open}
+        setOpen={setOpen}
+        success={status?.success}
+        message={status?.message}
+      />
     </Box>
   );
 }

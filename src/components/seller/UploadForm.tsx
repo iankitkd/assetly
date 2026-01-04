@@ -22,6 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ASSET_CATEGORIES_LIST } from "@/data/asset-categories";
 import { assetSchema, AssetValues } from "@/lib/validators";
 import { uploadAsset } from "@/actions/upload-asset";
+import AlertSnackbar from "@/components/shared/AlertSnackbar";
 
 export default function UploadForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -244,20 +245,12 @@ export default function UploadForm() {
         </Box>
       </CardContent>
 
-      <Snackbar 
-        open={open} 
-        autoHideDuration={5000} 
-        onClose={() => setOpen(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert
-          severity={status?.success ? "success" : "error"}
-          variant="filled"
-          sx={{ width: '100%' }}
-        >
-          {status?.message}
-        </Alert>
-      </Snackbar>
+      <AlertSnackbar
+        open={open}
+        setOpen={setOpen}
+        success={status?.success}
+        message={status?.message}
+      />
     </Card>
   );
 }

@@ -78,3 +78,54 @@ export const getLatestAssets = async ({
 
   return assets;
 };
+
+
+export const getAssetDetails = async ({assetId, userId} : {assetId: string, userId?: string}) => {
+  try {
+    const asset = await prisma.asset.findUnique({
+      where: { id: assetId },
+      include: {
+        seller: {
+          select: { id: true, name: true },
+        },
+      },
+    });
+
+    if (!asset) {
+      return ({asset: null, hasBought: false, isOwner: false});
+    }
+
+    let hasBought = false;
+    let isOwner = false;
+    let isInCart = false;
+
+    if (userId) {
+      isOwner = userId === asset.sellerId;
+
+      const purchase = await prisma.purchase.findUnique({
+        where: {
+          userId_assetId: {
+            userId: userId,
+            assetId: assetId,
+          },
+        },
+      });
+
+      const cart = await prisma.cartItem.findUnique({
+        where: {
+          userId_assetId: {
+            userId: userId,
+            assetId: assetId,
+          },
+        },
+      });
+
+      hasBought = !!purchase;
+      isInCart = !!cart;
+    }
+
+    return {asset, hasBought, isOwner, isInCart};
+  } catch (error) {
+    return ({asset: null, hasBought: false, isOwner: false});
+  }
+}
