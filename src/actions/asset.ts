@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { SortTypes } from "@/data";
+import { auth } from "@/auth";
 
 export interface SearchProps {
   q?: string;
@@ -80,8 +81,11 @@ export const getLatestAssets = async ({
 };
 
 
-export const getAssetDetails = async ({assetId, userId} : {assetId: string, userId?: string}) => {
+export const getAssetDetails = async (assetId: string) => {
   try {
+    const session = await auth();
+    const userId = session?.user.id;
+
     const asset = await prisma.asset.findUnique({
       where: { id: assetId },
       include: {
@@ -127,5 +131,17 @@ export const getAssetDetails = async ({assetId, userId} : {assetId: string, user
     return {asset, hasBought, isOwner, isInCart};
   } catch (error) {
     return ({asset: null, hasBought: false, isOwner: false});
+  }
+}
+
+
+export const getAssetsByIds = async (assetIds: string[]) => {
+  try {
+    const assets = await prisma.asset.findMany({
+      where: { id: { in: assetIds } },
+    });
+    return assets;
+  } catch (error) {
+    return [];
   }
 }

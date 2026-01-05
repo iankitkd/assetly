@@ -8,7 +8,8 @@ export const publicRoutes = [
   "/about", 
   "/login", 
   "/signup",
-  "/assets"
+  "/assets",
+  "/cart",
 ];
 
 export const protectedRoutes = [

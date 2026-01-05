@@ -34,7 +34,7 @@ export const addToCart = async (assetId: string) => {
     return { success: false, message: "Unauthorized" };
   }
 
-  /* Fetch asset */
+  // Fetch asset
   const asset = await prisma.asset.findUnique({
     where: { id: assetId },
     select: {
@@ -47,12 +47,12 @@ export const addToCart = async (assetId: string) => {
     return { success: false, message: "Asset not found" };
   }
 
-  /* Prevent seller adding own asset */
+  // Prevent seller adding own asset
   if (asset.sellerId === userId) {
     return { success: false, message: "Own asset" };
   }
 
-  /* Prevent adding purchased asset */
+  // Prevent adding purchased asset
   const alreadyPurchased = await prisma.purchase.findFirst({
     where: {
       userId,
@@ -64,7 +64,7 @@ export const addToCart = async (assetId: string) => {
     return { success: false, message: "Already Purchased" };
   }
 
-  /* Add to cart */
+  // Add to cart
   await prisma.cartItem.upsert({
     where: {
       userId_assetId: {
@@ -94,5 +94,31 @@ export const removeFromCart = async (assetId: string) => {
         assetId,
       },
     },
+  });
+};
+
+export const getCartCount = async () : Promise<number> => {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return 0;
+
+  return await prisma.cartItem.count({
+    where: { userId: userId },
+  });
+}
+
+
+export const mergeGuestCart = async (assetIds: string[]) => {
+  const session = await auth();
+  const userId = session?.user.id;
+
+  if(!userId) return;
+
+  await prisma.cartItem.createMany({
+    data: assetIds.map((id) => ({
+      userId,
+      assetId: id,
+    })),
+    skipDuplicates: true,
   });
 };

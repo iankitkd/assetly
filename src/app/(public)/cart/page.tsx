@@ -1,9 +1,11 @@
 
 import { getCartItems } from "@/actions/cart";
+import { auth } from "@/auth";
 import Cart from "@/components/commerce/Cart";
 import { Container, Typography } from "@mui/material";
 
 export default async function CartPage() {
+  const session = await auth();
   const cartItems = await getCartItems();
 
   return (
@@ -12,7 +14,7 @@ export default async function CartPage() {
         Your Cart
       </Typography>
 
-      <Cart items={cartItems} />
+      <Cart items={cartItems} isLoggedIn={!!session?.user} />
     </Container>
   );
 }

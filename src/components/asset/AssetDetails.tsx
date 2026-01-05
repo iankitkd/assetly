@@ -16,6 +16,8 @@ import { addToCart } from "@/actions/cart";
 import { useRouter } from "next/navigation";
 import AlertSnackbar from "@/components/shared/AlertSnackbar";
 import { useState } from "react";
+import { addToGuestCart } from "@/utils/cartStorage";
+import { useCartStore } from "@/store/cartStore";
 
 type Props = {
   asset: any;
@@ -35,11 +37,11 @@ export default function AssetDetails({
   const canDownload = isOwner || hasBought;
 
   const router = useRouter();
-  const [status, setStatus] = useState<{success: boolean, message: string}>();
+  const [status, setStatus] = useState<{success: boolean, message: string}>({success: isInCart, message: ""});
   const [open, setOpen] = useState(false);
 
   const addToCartHandler = async () => {
-    if(isInCart) {
+    if(status?.success) {
       router.push("/cart");
       return;
     }
@@ -48,9 +50,10 @@ export default function AssetDetails({
       const res = await addToCart(asset.id);
       setStatus({success: res.success, message: res.message});
     } else{
-      // add to local storage
+      addToGuestCart(asset.id);
       setStatus({success: true, message: "Added to Cart"});
     }
+    useCartStore.getState().increment();
     setOpen(true);
     router.refresh();
   }
@@ -113,7 +116,7 @@ export default function AssetDetails({
                 startIcon={<ShoppingCartIcon />}
                 onClick={addToCartHandler}
               >
-                {isInCart ? "Go to Cart" : "Add to Cart"}
+                {status?.success ? "Go to Cart" : "Add to Cart"}
               </Button>
 
               <Button

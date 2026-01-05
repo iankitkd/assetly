@@ -7,10 +7,8 @@ export default async function AssetPage(props: {params: Promise<{ id: string }>}
   const params = await props.params;
   const session = await auth();
 
-  const { asset, isOwner, hasBought, isInCart } = await getAssetDetails({
-    assetId: params.id, 
-    userId: session?.user.id
-  });
+  const assetId = params.id;
+  const { asset, isOwner, hasBought, isInCart } = await getAssetDetails(assetId);
 
   if (!asset) return notFound();
 

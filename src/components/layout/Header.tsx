@@ -11,28 +11,40 @@ import {
   Collapse,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { SearchIcon } from "@/components/icons";
 import HeaderActions from "@/components/layout/HeaderActions";
 import Logo from "@/components/shared/Logo";
 import SearchField from "@/components/layout/SearchField";
+import { getGuestCartCount } from "@/utils/cartStorage";
+import { useCartStore } from "@/store/cartStore";
 
 interface HeaderProps {
   isLoggedIn?: boolean;
   role?: "USER" | "SELLER";
+  serverCartCount: number;
 }
 
 export default function Header({
   isLoggedIn = false,
   role = "USER",
+  serverCartCount,
 }: HeaderProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  // const [count, setCount] = useState(0);
 
-  const cartCount = 2;
+  useEffect(() => {
+  if (!isLoggedIn) {
+    useCartStore.getState().setCount(getGuestCartCount());
+  } else {
+    useCartStore.getState().setCount(serverCartCount);
+  }
+}, [isLoggedIn]);
+
 
   return (
     <AppBar
@@ -74,7 +86,7 @@ export default function Header({
 
           {/* Actions */}
           <HeaderActions
-            cartCount={cartCount}
+            // cartCount={count}
             role={role}
             isLoggedIn={isLoggedIn}
             isMobile={isMobile}

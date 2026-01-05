@@ -11,6 +11,10 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { removeFromCart } from "@/actions/cart";
+import { useEffect, useState } from "react";
+import { getGuestCart, removeFromGuestCart } from "@/utils/cartStorage";
+import { Asset } from "@/types";
+import { useCartStore } from "@/store/cartStore";
 
 interface CartItem {
   id: string;
@@ -22,17 +26,54 @@ interface CartItem {
   };
 }
 
-export default function Cart({ items }: { items: CartItem[] }) {
+export default function Cart({ items, isLoggedIn }: { items: CartItem[], isLoggedIn: boolean }) {
   const router = useRouter();
 
-  const total = items.reduce((sum, i) => sum + i.asset.price, 0);
+  const [guestItems, setGuestItems] = useState<CartItem[]>([]);
 
-  if (items.length === 0) {
-    return <Typography color="text.secondary">Your cart is empty.</Typography>;
+  const getCart = async () => {
+    const ids = getGuestCart();
+
+    if (!ids.length) {
+      setGuestItems([]);
+      return;
+    }
+
+    const res = await fetch("/api/cart/guest", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids }),
+    });
+    const assets = await res.json();
+
+    const items = assets.map((el: Asset) => ({id: el.id, asset: el}));
+    setGuestItems(items);
+  };
+
+  useEffect(() => {
+    if(!isLoggedIn) getCart();
+  }, [isLoggedIn]);
+
+
+  const data = !isLoggedIn ? guestItems : items ?? [];
+  const total = data.reduce((sum, i) => sum + i.asset.price, 0);
+
+  if (data.length === 0) {
+    return (
+      <Typography color="text.secondary">
+        Your cart is empty.
+      </Typography>
+    )
   }
 
   const removeFromCartHandler = async (id: string) => {
-    await removeFromCart(id);
+    if(isLoggedIn) {
+      await removeFromCart(id);
+    } else {
+      removeFromGuestCart(id);
+      setGuestItems((prev) => prev.filter((cart) => cart.id !== id));
+    }
+    useCartStore.getState().decrement();
     router.refresh();
   };
 
@@ -40,7 +81,7 @@ export default function Cart({ items }: { items: CartItem[] }) {
     <Stack direction={{ xs: "column", md: "row" }} spacing={4}>
       {/* Cart Items */}
       <Stack spacing={2} flex={1}>
-        {items.map((item) => (
+        {data.map((item) => (
           <Card
             key={item.id}
             sx={{

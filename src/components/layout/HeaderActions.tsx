@@ -4,22 +4,25 @@ import {
   SellIcon,
   ShoppingCartIcon,
 } from "@/components/icons";
+import { useCartStore } from "@/store/cartStore";
 import { Badge, Box, Button, IconButton, Tooltip } from "@mui/material";
 import Link from "next/link";
 
 interface HeaderActionsProps {
   isMobile: boolean;
-  cartCount: number;
+  // cartCount: number;
   isLoggedIn: boolean;
   role: "USER" | "SELLER";
 }
 
 export default function HeaderActions({
   isMobile,
-  cartCount,
+  // cartCount,
   isLoggedIn,
   role,
 }: HeaderActionsProps) {
+  const cartCount = useCartStore((s) => s.count);
+
   return (
     <Box
       sx={{

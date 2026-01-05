@@ -42,7 +42,6 @@ export default auth((req) => {
 
   // If not logged in and trying to access protected routes
   if (!isPublicRoute) {
-    console.log("called redirect");
     const callbackUrl = pathname + search;
     return NextResponse.redirect(
         new URL(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`, nextUrl)

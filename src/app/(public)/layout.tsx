@@ -3,11 +3,14 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Box, Container } from "@mui/material";
 import { auth } from "@/auth";
+import { getCartCount } from "@/actions/cart";
 
 export default async function PublicLayout({ children }: Readonly<{children: React.ReactNode}>) {
   const session = await auth();
   const isLoggedIn = !!session;
   const role = session?.user?.role;
+
+  const serverCartCount = await getCartCount();
 
   return (
     <Box
@@ -20,6 +23,7 @@ export default async function PublicLayout({ children }: Readonly<{children: Rea
       <Header
         isLoggedIn={isLoggedIn}
         role={role}
+        serverCartCount={serverCartCount}
       />
 
       <Container
