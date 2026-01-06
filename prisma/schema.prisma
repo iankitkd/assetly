@@ -31,6 +31,7 @@ model User {
   assets        Asset[]
   purchases     Purchase[]
   cartItems     CartItem[]
+  orderItems    Order[]
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -70,6 +71,7 @@ model Asset {
   salesCount  Int      @default(0)
   purchases   Purchase[]
   cartItems   CartItem[]
+  orderItems  OrderItem[]
 
   sellerId    String
   seller      User     @relation(fields: [sellerId], references: [id])
@@ -100,4 +102,33 @@ model CartItem {
   asset     Asset    @relation(fields: [assetId], references: [id])
 
   @@unique([userId, assetId])
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  userId        String
+  totalAmount   Int
+  status        OrderStatus @default(PENDING)
+  stripeSession String?     @unique
+  createdAt     DateTime    @default(now())
+  
+  items         OrderItem[]
+
+  user          User        @relation(fields: [userId], references: [id])
+}
+
+model OrderItem {
+  id            String      @id @default(cuid())
+  orderId       String
+  assetId       String
+  price         Int
+
+  order         Order       @relation(fields: [orderId], references: [id])
+  asset         Asset       @relation(fields: [assetId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
 }
