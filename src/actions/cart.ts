@@ -112,10 +112,31 @@ export const mergeGuestCart = async (assetIds: string[]) => {
   const session = await auth();
   const userId = session?.user.id;
 
-  if(!userId) return;
+  if (!userId || assetIds.length === 0) return;
 
+  // 1️. Get already purchased assets
+  const purchasedAssets = await prisma.purchase.findMany({
+    where: {
+      userId,
+      assetId: { in: assetIds },
+    },
+    select: { assetId: true },
+  });
+
+  const purchasedSet = new Set(
+    purchasedAssets.map((p) => p.assetId)
+  );
+
+  // 2️. Remove purchased assets
+  const validAssetIds = assetIds.filter(
+    (id) => !purchasedSet.has(id)
+  );
+
+  if (validAssetIds.length === 0) return;
+
+  // 3️. Add remaining to cart
   await prisma.cartItem.createMany({
-    data: assetIds.map((id) => ({
+    data: validAssetIds.map((id) => ({
       userId,
       assetId: id,
     })),

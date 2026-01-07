@@ -41,7 +41,7 @@ export async function createCheckoutSession() {
     line_items: cartItems.map((item) => ({
       price_data: {
         currency: "inr",
-        product_data: { name: item.asset.title },
+        product_data: { name: item.asset.title, images: [item.asset.previewUrl] },
         unit_amount: item.asset.price * 100,
       },
       quantity: 1,
@@ -49,7 +49,7 @@ export async function createCheckoutSession() {
     metadata: {
       orderId: order.id,
     },
-    success_url: `${APP_URL}/checkout/success`,
+    success_url: `${APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${APP_URL}/cart`,
   });
 

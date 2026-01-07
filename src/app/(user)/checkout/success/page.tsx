@@ -1,14 +1,23 @@
-import { Box, Typography } from "@mui/material";
+import CheckoutSuccess from "@/components/commerce/CheckoutSuccess";
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
-export default function page() {
-  return (
-    <Box py={6} textAlign="center">
-      <Typography variant="h4" fontWeight={600}>
-        Payment Successful
-      </Typography>
-      <Typography>
-        Your assets are now available in your library.
-      </Typography>
-    </Box>
-  );
+type SearchParams = Promise<{ [key: string]: string }>
+
+export default async function page(props: {searchParams: SearchParams}) {
+  const searchParams = await props.searchParams;
+  const sessionId = searchParams.session_id;
+
+  if (!sessionId) redirect("/");
+
+  const order = await prisma.order.findUnique({
+    where: { stripeSession: sessionId },
+  });
+
+  // No order = no success
+  if (!order || order.status !== "PAID") {
+    redirect("/");
+  }
+
+  return <CheckoutSuccess />;
 }

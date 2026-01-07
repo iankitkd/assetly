@@ -1,7 +1,7 @@
 // export { auth as proxy } from "@/auth"
 
 import { auth } from "@/auth";
-import { apiAuthPrefix, authRoutes, DEFAULT_LOGIN_REDIRECT, publicRoutes, sellerRoutes } from "@/routes";
+import { apiPrefix, authRoutes, DEFAULT_LOGIN_REDIRECT, publicRoutes, sellerRoutes } from "@/routes";
 import { NextResponse } from "next/server";
 
 export default auth((req) => {
@@ -12,14 +12,14 @@ export default auth((req) => {
   const user = session?.user;
   // console.log(user, "user")
 
-  const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
+  const isApiRoute = pathname.startsWith(apiPrefix);
   const isAuthRoute = authRoutes.includes(pathname);
-  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
+  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route)) || pathname === "/";
   const isSellerRoute = sellerRoutes.some((route) => pathname.startsWith(route));
   const isOnboardingRoute = pathname.startsWith("/onboarding");
 
   // Allow API auth endpoints
-  if (isApiAuthRoute) return NextResponse.next();
+  if (isApiRoute) return NextResponse.next();
 
   if(isLoggedIn) {
     // Logged in but role not chosen

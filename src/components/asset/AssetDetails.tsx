@@ -16,7 +16,7 @@ import { addToCart } from "@/actions/cart";
 import { useRouter } from "next/navigation";
 import AlertSnackbar from "@/components/shared/AlertSnackbar";
 import { useState } from "react";
-import { addToGuestCart } from "@/utils/cartStorage";
+import { addToGuestCart, isInGuestCart } from "@/utils/cartStorage";
 import { useCartStore } from "@/store/cartStore";
 
 type Props = {
@@ -36,8 +36,12 @@ export default function AssetDetails({
 }: Props) {
   const canDownload = isOwner || hasBought;
 
+  console.log(isLoggedIn, isInCart, isInGuestCart(asset.id), asset.id);
+
+  const isInCartStatus = isLoggedIn ? isInCart : isInGuestCart(asset.id);
+
   const router = useRouter();
-  const [status, setStatus] = useState<{success: boolean, message: string}>({success: isInCart, message: ""});
+  const [status, setStatus] = useState<{success: boolean, message: string}>({success: isInCartStatus, message: ""});
   const [open, setOpen] = useState(false);
 
   const addToCartHandler = async () => {

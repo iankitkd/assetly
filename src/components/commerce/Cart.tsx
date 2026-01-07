@@ -10,11 +10,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { removeFromCart } from "@/actions/cart";
+import { mergeGuestCart, removeFromCart } from "@/actions/cart";
 import { useEffect, useState } from "react";
-import { getGuestCart, removeFromGuestCart } from "@/utils/cartStorage";
+import { clearGuestCart, getGuestCart, removeFromGuestCart } from "@/utils/cartStorage";
 import { Asset } from "@/types";
 import { useCartStore } from "@/store/cartStore";
+import Loader from "@/components/shared/Loader";
 
 interface CartItem {
   id: string;
@@ -29,9 +30,11 @@ interface CartItem {
 export default function Cart({ items, isLoggedIn }: { items: CartItem[], isLoggedIn: boolean }) {
   const router = useRouter();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [guestItems, setGuestItems] = useState<CartItem[]>([]);
 
   const getCart = async () => {
+    setIsLoading(true);
     const ids = getGuestCart();
 
     if (!ids.length) {
@@ -48,15 +51,30 @@ export default function Cart({ items, isLoggedIn }: { items: CartItem[], isLogge
 
     const items = assets.map((el: Asset) => ({id: el.id, asset: el}));
     setGuestItems(items);
+    setIsLoading(false);
   };
+
+  const mergeCart = async () => {
+    setIsLoading(true);
+    await mergeGuestCart(getGuestCart());
+    clearGuestCart();
+    router.refresh();
+    setIsLoading(false);
+  }
 
   useEffect(() => {
     if(!isLoggedIn) getCart();
+
+    if(isLoggedIn) mergeCart();
   }, [isLoggedIn]);
 
 
   const data = !isLoggedIn ? guestItems : items ?? [];
   const total = data.reduce((sum, i) => sum + i.asset.price, 0);
+
+  if(isLoading) {
+    return <Loader />
+  }
 
   if (data.length === 0) {
     return (
@@ -144,9 +162,9 @@ export default function Cart({ items, isLoggedIn }: { items: CartItem[], isLogge
             size="large"
             fullWidth
             sx={{ mt: 2 }}
-            href="/checkout"
+            href={isLoggedIn ? "/checkout" : "/login?callbackUrl=/cart"}
           >
-            Proceed to Checkout
+            {isLoggedIn ? "Proceed to Checkout" : "Login to buy"}
           </Button>
         </Stack>
       </Box>

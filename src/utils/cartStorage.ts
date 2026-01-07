@@ -11,6 +11,11 @@ export const getGuestCartCount = (): number => {
   return cart.length;
 };
 
+export const isInGuestCart = (assetId: string): boolean => {
+  const cart = getGuestCart();
+  return cart.includes(assetId);
+};
+
 export const addToGuestCart = (assetId: string) => {
   const cart = getGuestCart();
   if (!cart.includes(assetId)) {

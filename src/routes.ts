@@ -1,9 +1,10 @@
 export const DEFAULT_LOGIN_REDIRECT = "/discover";
-export const apiAuthPrefix = "/api/auth";
+export const apiPrefix = "/api";
+
 export const authRoutes = ["/login", "/signup"];
 
 export const publicRoutes = [
-  "/",
+  // "/",
   "/discover", 
   "/about", 
   "/login", 
@@ -18,6 +19,7 @@ export const protectedRoutes = [
   "/settings",
   "/orders",
   "/library",
+  "/checkout",
 ];
 
 export const sellerRoutes = [

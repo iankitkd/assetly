@@ -5,7 +5,7 @@ import {
   ErrorOutline, CheckCircleOutline, CloudUpload, 
   Dashboard, Inventory, AddBox, Add, Download,
   ShoppingBag, ShoppingCart, Sort, Tune, ClearAll,
-  CurrencyRupee, Menu, Login, Sell, Close,
+  CurrencyRupee, Menu, Login, Sell, Close, CheckCircleRounded,
 } from "@mui/icons-material";
 
 export {
@@ -31,6 +31,7 @@ export {
   Login as LoginIcon,
   Sell as SellIcon,
   Close as CloseIcon,
+  CheckCircleRounded as CheckCircleRoundedIcon,
 }
 
 export function GoogleIcon() {
