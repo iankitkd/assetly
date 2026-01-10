@@ -11,9 +11,10 @@ export async function createCheckoutSession() {
   if (!session?.user) throw new Error("Unauthorized");
 
   const cartItems = await prisma.cartItem.findMany({
-    where: { userId: session.user.id },
+    where: { userId: session.user.id, asset: {price: {gt: 0}} },
     include: { asset: true },
   });
+
 
   if (!cartItems.length) throw new Error("Cart empty");
 
@@ -37,7 +38,7 @@ export async function createCheckoutSession() {
   // 2️. Create Stripe Checkout Session
   const checkoutSession = await stripe.checkout.sessions.create({
     mode: "payment",
-    payment_method_types: ["card", "amazon_pay", "paypal"],
+    payment_method_types: ["card"],
     line_items: cartItems.map((item) => ({
       price_data: {
         currency: "inr",
@@ -48,7 +49,10 @@ export async function createCheckoutSession() {
     })),
     metadata: {
       orderId: order.id,
+      userId: session.user.id,
     },
+    client_reference_id: session.user.id,
+    customer_email: session.user.email ?? undefined,
     success_url: `${APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${APP_URL}/cart`,
   });
@@ -60,4 +64,38 @@ export async function createCheckoutSession() {
   });
 
   return checkoutSession.url;
+}
+
+
+
+export async function verifyStripeSession(sessionId: string) {
+  const authSession = await auth();
+  if (!authSession?.user) {
+    throw new Error("Unauthorized");
+  }
+
+  if (!sessionId) {
+    throw new Error("Missing session_id");
+  }
+
+  const session = await stripe.checkout.sessions.retrieve(sessionId, {
+    expand: ["payment_intent"],
+  });
+
+  // 1️. Session must exist
+  if (!session) {
+    throw new Error("Invalid Stripe session");
+  }
+
+  // 2. User must match
+  if (session.metadata?.userId !== authSession.user.id) {
+    throw new Error("User mismatch");
+  }
+
+  // 3. Payment must be completed
+  if (session.payment_status !== "paid") {
+    throw new Error("Payment not completed");
+  }
+
+  return session;
 }

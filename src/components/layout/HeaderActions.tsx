@@ -84,7 +84,7 @@ export default function HeaderActions({
         ))}
 
       {/* Sell */}
-      {role !== "USER" &&
+      {(!isLoggedIn || role === "SELLER") &&
         (isMobile ? (
           <Tooltip title="Sell">
             <IconButton

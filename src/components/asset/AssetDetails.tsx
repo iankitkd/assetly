@@ -36,8 +36,6 @@ export default function AssetDetails({
 }: Props) {
   const canDownload = isOwner || hasBought;
 
-  console.log(isLoggedIn, isInCart, isInGuestCart(asset.id), asset.id);
-
   const isInCartStatus = isLoggedIn ? isInCart : isInGuestCart(asset.id);
 
   const router = useRouter();

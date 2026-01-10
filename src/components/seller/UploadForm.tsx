@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import {
-  Alert,
   Box,
   Button,
   Card,
@@ -10,7 +9,6 @@ import {
   CardHeader,
   Divider,
   MenuItem,
-  Snackbar,
   Stack,
   TextField,
   Typography,
@@ -23,16 +21,20 @@ import { ASSET_CATEGORIES_LIST } from "@/data/asset-categories";
 import { assetSchema, AssetValues } from "@/lib/validators";
 import { uploadAsset } from "@/actions/upload-asset";
 import AlertSnackbar from "@/components/shared/AlertSnackbar";
+import { useRouter } from "next/navigation";
 
 export default function UploadForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<{success: boolean, message: string}>();
   const [open, setOpen] = useState(false);
 
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<AssetValues>({
     resolver: zodResolver(assetSchema),
@@ -71,6 +73,8 @@ export default function UploadForm() {
       const res = await uploadAsset(formData);
       setStatus({success: res.success, message: res.message});
       setOpen(true);
+      reset({title: "", description: "", price: 0, mainCategory: "", subCategory: "", preview: undefined, assetFile: undefined});
+      router.push("/seller/assets");
     } catch (error) {
       console.log(error);
     } finally {
@@ -222,8 +226,8 @@ export default function UploadForm() {
                 startIcon={<CloudUploadIcon />}
                 sx={{ py: 2, borderStyle: "dashed", borderRadius: 2,}}
               >
-                {assetFileName ?? "Upload Asset File (ZIP, PDF, etc)"}
-                <input hidden type="file" {...register('assetFile')} />
+                {assetFileName ?? "Upload Asset File (ZIP, PDF)"}
+                <input hidden type="file" accept=".zip,.pdf" {...register('assetFile')} />
               </Button>
 
               <Typography variant="caption" color="error">
