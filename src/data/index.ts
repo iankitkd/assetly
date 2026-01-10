@@ -16,3 +16,6 @@ export const sortItems: Record<SortTypes, {id: SortTypes, label: string}> = {
   "price-asc": {id: "price-asc", label: "Price: Low → High"},
   "price-desc": {id: "price-desc", label: "Price: High → Low"},
 }
+
+export const ASSET_PREVIEW_BUCKET = "asset-previews";
+export const ASSET_BUCKET = "asset-files";

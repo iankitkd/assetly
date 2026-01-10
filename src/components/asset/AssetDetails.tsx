@@ -36,14 +36,14 @@ export default function AssetDetails({
 }: Props) {
   const canDownload = isOwner || hasBought;
 
-  const isInCartStatus = isLoggedIn ? isInCart : isInGuestCart(asset.id);
+  const [isInCartStatus, setIsInCartStatus] = useState(isLoggedIn ? isInCart : isInGuestCart(asset.id));
 
   const router = useRouter();
-  const [status, setStatus] = useState<{success: boolean, message: string}>({success: isInCartStatus, message: ""});
+  const [status, setStatus] = useState<{success: boolean, message: string}>({success: false, message: ""});
   const [open, setOpen] = useState(false);
 
   const addToCartHandler = async () => {
-    if(status?.success) {
+    if(isInCartStatus) {
       router.push("/cart");
       return;
     }
@@ -56,9 +56,23 @@ export default function AssetDetails({
       setStatus({success: true, message: "Added to Cart"});
     }
     useCartStore.getState().increment();
+    setIsInCartStatus(true);
     setOpen(true);
     router.refresh();
   }
+
+  const downloadAsset = async (assetId: string) => {
+    const res = await fetch(`/api/assets/${assetId}/download`);
+
+    if (!res.ok) {
+      setStatus({success: false, message: "You are not allowed to download this asset"})
+      setOpen(true);
+      return;
+    }
+
+    const { url } = await res.json();
+    window.location.href = url;
+  };
 
   return (
     <Box maxWidth="xl" sx={{ mx: "auto", py: 5, px: 2 }}>
@@ -118,10 +132,10 @@ export default function AssetDetails({
                 startIcon={<ShoppingCartIcon />}
                 onClick={addToCartHandler}
               >
-                {status?.success ? "Go to Cart" : "Add to Cart"}
+                {isInCartStatus ? "Go to Cart" : "Add to Cart"}
               </Button>
 
-              <Button
+              {/* <Button
                 size="large"
                 fullWidth
                 variant="outlined"
@@ -129,7 +143,7 @@ export default function AssetDetails({
                 href={`/checkout/?id=${asset.id}`}
               >
                 Buy Now
-              </Button>
+              </Button> */}
             </Stack>
           )}
 
@@ -139,8 +153,7 @@ export default function AssetDetails({
               fullWidth
               variant="contained"
               startIcon={<DownloadIcon />}
-              href={asset.fileUrl}
-              target="_blank"
+              onClick={() => downloadAsset(asset.id)}
             >
               Download Asset
             </Button>

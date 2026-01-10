@@ -59,3 +59,11 @@ export const createPurchaseForFreeItems = async () => {
     return { success: false, message: "Something went wrong" };
   }
 };
+
+
+export const getPurchase = async ({assetId, userId}: {assetId: string, userId: string}) => {
+  return await prisma.purchase.findFirst({
+    where: { assetId, userId },
+    include: { asset: true },
+  });
+}

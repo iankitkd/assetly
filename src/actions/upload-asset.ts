@@ -1,12 +1,10 @@
 "use server";
 
 import { auth } from "@/auth";
+import { ASSET_BUCKET, ASSET_PREVIEW_BUCKET } from "@/data";
 import { prisma } from "@/lib/prisma";
 import { getPublicUrl, uploadFile } from "@/lib/storage";
 import { assetSchema } from "@/lib/validators";
-
-const ASSET_PREVIEW_BUCKET = "asset-previews";
-const ASSET_BUCKET = "asset-files";
 
 export async function uploadAsset(formData: FormData) {
   try {
