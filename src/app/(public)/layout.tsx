@@ -24,6 +24,7 @@ export default async function PublicLayout({ children }: Readonly<{children: Rea
         isLoggedIn={isLoggedIn}
         role={role}
         serverCartCount={serverCartCount}
+        containsSearchBar={true}
       />
 
       <Container

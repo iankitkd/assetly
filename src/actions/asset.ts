@@ -145,3 +145,41 @@ export const getAssetsByIds = async (assetIds: string[]) => {
     return [];
   }
 }
+
+export async function getRecentAssetsBySeller(sellerId: string) {
+  return prisma.asset.findMany({
+    where: { sellerId },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+    select: {
+      id: true,
+      title: true,
+      price: true,
+      category: true,
+      salesCount: true,
+      previewUrl: true,
+    },
+  });
+}
+
+export async function getRecentPurchasedAssets(userId: string) {
+  const purchases = await prisma.purchase.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+    select: {
+      asset: {
+        select: {
+          id: true,
+          title: true,
+          price: true,
+          category: true,
+          salesCount: true,
+          previewUrl: true,
+        },
+      },
+    },
+  });
+
+  return purchases.map((p) => p.asset);
+}

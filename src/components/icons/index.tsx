@@ -6,6 +6,7 @@ import {
   Dashboard, Inventory, AddBox, Add, Download,
   ShoppingBag, ShoppingCart, Sort, Tune, ClearAll,
   CurrencyRupee, Menu, Login, Sell, Close, CheckCircleRounded,
+  ReceiptLong, Settings, LibraryBooks, Upload, Wallet,
 } from "@mui/icons-material";
 
 export {
@@ -32,6 +33,11 @@ export {
   Sell as SellIcon,
   Close as CloseIcon,
   CheckCircleRounded as CheckCircleRoundedIcon,
+  LibraryBooks as LibraryBooksIcon,
+  ReceiptLong as ReceiptLongIcon,
+  Settings as SettingsIcon,
+  Wallet as WalletIcon,
+  Upload as UploadIcon,
 }
 
 export function GoogleIcon() {

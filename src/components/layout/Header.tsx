@@ -24,18 +24,19 @@ interface HeaderProps {
   isLoggedIn?: boolean;
   role?: "USER" | "SELLER";
   serverCartCount: number;
+  containsSearchBar?: boolean;
 }
 
 export default function Header({
   isLoggedIn = false,
   role = "USER",
   serverCartCount,
+  containsSearchBar = false,
 }: HeaderProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  // const [count, setCount] = useState(0);
 
   useEffect(() => {
   if (!isLoggedIn) {
@@ -48,9 +49,10 @@ export default function Header({
 
   return (
     <AppBar
-      position="sticky"
+      position="fixed"
       elevation={1}
       sx={{
+        zIndex: 1201,
         backgroundColor: "background.paper",
         color: "text.primary",
       }}
@@ -70,10 +72,10 @@ export default function Header({
           <Logo />
 
           {/* Desktop Search */}
-          {!isMobile && <SearchField />}
+          {(!isMobile && containsSearchBar) && <SearchField />}
 
           {/* Mobile Search Toggle */}
-          {isMobile && (
+          {(isMobile && containsSearchBar) && (
             <Tooltip title="Search">
               <IconButton
                 color="inherit"
@@ -86,7 +88,6 @@ export default function Header({
 
           {/* Actions */}
           <HeaderActions
-            // cartCount={count}
             role={role}
             isLoggedIn={isLoggedIn}
             isMobile={isMobile}
@@ -95,7 +96,7 @@ export default function Header({
       </Toolbar>
 
       {/* Mobile Search Bar */}
-      {isMobile && (
+      {(isMobile && containsSearchBar) && (
         <Collapse in={isSearchOpen}>
           <Box sx={{ px: 2, pb: 1.5, }}>
             <SearchField fullWidth />

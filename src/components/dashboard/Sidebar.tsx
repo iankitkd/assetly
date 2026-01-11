@@ -1,6 +1,7 @@
 "use client";
 
-import { AddBoxIcon, DashboardIcon, InventoryIcon } from "@/components/icons";
+import { AddBoxIcon, DashboardIcon, InventoryIcon, LibraryBooksIcon, ReceiptLongIcon, SettingsIcon, WalletIcon } from "@/components/icons";
+import { RoleType } from "@/types";
 import {
   Drawer,
   List,
@@ -13,15 +14,28 @@ import { usePathname, useRouter } from "next/navigation";
 
 const drawerWidth = 240;
 
-const menuItems = [
-  { label: "Dashboard", icon: <DashboardIcon />, path: "/seller/dashboard" },
-  { label: "Assets", icon: <InventoryIcon />, path: "/seller/assets" },
-  { label: "Upload Asset", icon: <AddBoxIcon />, path: "/seller/assets/new" },
-];
+const baseMenu = [
+  { label: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
+  { label: "Library", icon: <LibraryBooksIcon />,  path: "/library" },
+  { label: "Orders", icon: <ReceiptLongIcon />, path: "/orders" },
+  { label: "Settings", icon: <SettingsIcon />, path: "/settings" },
+]
 
-export default function SellerSidebar() {
+const sellerMenu = [
+  { label: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
+  { label: "Library", icon: <LibraryBooksIcon />,  path: "/library" },
+  { label: "My Assets", icon: <InventoryIcon />, path: "/assets" },
+  { label: "Upload Asset", icon: <AddBoxIcon />, path: "/assets/new" },
+  { label: "Earnings", icon: <WalletIcon />, path: "/earnings" },
+  { label: "Settings", icon: <SettingsIcon />, path: "/settings" },
+]
+
+export default function Sidebar({role} : {role: RoleType}) {
   const pathname = usePathname();
   const router = useRouter();
+
+  const menuItems = role === "SELLER" ? sellerMenu : baseMenu;
+
   return (
     <Drawer
       variant="permanent"

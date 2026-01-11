@@ -10,14 +10,12 @@ import Link from "next/link";
 
 interface HeaderActionsProps {
   isMobile: boolean;
-  // cartCount: number;
   isLoggedIn: boolean;
   role: "USER" | "SELLER";
 }
 
 export default function HeaderActions({
   isMobile,
-  // cartCount,
   isLoggedIn,
   role,
 }: HeaderActionsProps) {
@@ -66,7 +64,7 @@ export default function HeaderActions({
             <IconButton
               color="inherit"
               component={Link}
-              href={role === "USER" ? "/dashboard" : "/seller/dashboard"}
+              href="/dashboard"
             >
               <DashboardIcon />
             </IconButton>
@@ -76,7 +74,7 @@ export default function HeaderActions({
             variant="contained"
             color="primary"
             component={Link}
-            href={role === "USER" ? "/dashboard" : "/seller/dashboard"}
+            href="/dashboard"
             startIcon={<DashboardIcon />}
           >
             Dashboard
@@ -90,7 +88,7 @@ export default function HeaderActions({
             <IconButton
               color="inherit"
               component={Link}
-              href="/seller/assets/new"
+              href="/assets/new"
             >
               <SellIcon />
             </IconButton>
@@ -100,7 +98,7 @@ export default function HeaderActions({
             variant="contained"
             color="primary"
             component={Link}
-            href="/seller/assets/new"
+            href="/assets/new"
             startIcon={<SellIcon />}
           >
             Sell

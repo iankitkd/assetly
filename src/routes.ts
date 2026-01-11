@@ -23,9 +23,7 @@ export const protectedRoutes = [
 ];
 
 export const sellerRoutes = [
-  "/seller",
-  "/seller/dashboard",
-  "/seller/assets",
-  "/seller/upload",
-  "/seller/earnings",
+  "/assets",
+  "/assets/new",
+  "/earnings",
 ];
