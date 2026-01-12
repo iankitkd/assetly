@@ -24,8 +24,8 @@ const baseMenu = [
 const sellerMenu = [
   { label: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
   { label: "Library", icon: <LibraryBooksIcon />,  path: "/library" },
-  { label: "My Assets", icon: <InventoryIcon />, path: "/assets" },
-  { label: "Upload Asset", icon: <AddBoxIcon />, path: "/assets/new" },
+  { label: "My Assets", icon: <InventoryIcon />, path: "/my-assets" },
+  { label: "Upload Asset", icon: <AddBoxIcon />, path: "/my-assets/new" },
   { label: "Earnings", icon: <WalletIcon />, path: "/earnings" },
   { label: "Settings", icon: <SettingsIcon />, path: "/settings" },
 ]

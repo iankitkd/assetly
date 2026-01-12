@@ -9,32 +9,31 @@ import {
 } from "@mui/material";
 
 import StatCard from "@/components/dashboard/StatCard";
-import AssetsTable from "@/components/seller/AssetsTable";
+import AssetsTable from "@/components/dashboard/AssetsTable";
 import { auth } from "@/auth";
-import { getRecentAssetsBySeller } from "@/actions/seller";
+import { getRecentAssetsBySeller, getSellerStats } from "@/actions/seller";
 import {
   InventoryIcon,
   LibraryBooksIcon,
   SellIcon,
   WalletIcon,
 } from "@/components/icons";
-import { getRecentPurchasedAssets } from "@/actions/asset";
+import { getBuyerStats, getRecentPurchasedAssets } from "@/actions/purchase";
 
 export default async function page() {
   const session = await auth();
+  const user = session?.user;
 
-  const userId = session?.user.id;
-
-  if (!userId) {
+  if (!user?.id) {
     throw new Error("Unauthorized");
   }
 
-  const user = session.user;
-  const assets = await getRecentAssetsBySeller(userId);
-  const purchasedAssets = await getRecentPurchasedAssets(userId);
-
-  const stats = { purchasedCount: 103, totalSpent: 10409 };
-  const sellerStats = { totalAssets: 26, totalSales: 12, totalEarnings: 420 };
+  const [assets, purchasedAssets, stats, sellerStats] = await Promise.all([
+    getRecentAssetsBySeller(user.id),
+    getRecentPurchasedAssets(user.id),
+    getBuyerStats(),
+    getSellerStats(),
+  ]);
 
   return (
     <Stack spacing={4}>
@@ -52,7 +51,7 @@ export default async function page() {
       <Grid container spacing={3}>
         <StatCard
           title="Assets Purchased"
-          value={stats.purchasedCount}
+          value={stats.assetsOwned}
           icon={<LibraryBooksIcon />}
         />
 
@@ -96,7 +95,7 @@ export default async function page() {
         <Box>
           <Box display="flex" justifyContent="space-between" mb={1}>
             <Typography variant="h6">Your Recent Assets</Typography>
-            <Button href="/assets" size="small">
+            <Button href="/my-assets" size="small">
               View All
             </Button>
           </Box>

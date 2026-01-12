@@ -8,6 +8,7 @@ import {
   TableBody,
   Chip,
   Button,
+  Typography,
 } from "@mui/material";
 import Link from "next/link";
 
@@ -19,11 +20,11 @@ export default function AssetsTable({ assets }: { assets: Asset[] }) {
     <Table size="small">
       <TableHead>
         <TableRow>
-          <TableCell>Title</TableCell>
-          <TableCell>Category</TableCell>
-          <TableCell>Price</TableCell>
-          <TableCell>Sales</TableCell>
-          <TableCell align="right">Action</TableCell>
+          <TableCell><Typography fontWeight={600}>Title</Typography></TableCell>
+          <TableCell><Typography fontWeight={600}>Category</Typography></TableCell>
+          <TableCell><Typography fontWeight={600}>Price</Typography></TableCell>
+          <TableCell><Typography fontWeight={600}>Sales</Typography></TableCell>
+          <TableCell align="right"><Typography fontWeight={600}>Action</Typography></TableCell>
         </TableRow>
       </TableHead>
 

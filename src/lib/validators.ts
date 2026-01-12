@@ -28,7 +28,7 @@ export const signupSchema = z.object({
 export const assetSchema = z.object({
   title: z.string().min(3, "Title is too short"),
   description: z.string().min(10, "Description is required"),
-  price: z.number().min(0, "Price must be greater than or equal to 0"),
+  price: z.number("Price is required").min(0, "Price must be greater than or equal to 0"),
   mainCategory: z.string().min(1, "Category is required"),
   subCategory: z.string().min(1, "SubCategory is required"),
   preview: z

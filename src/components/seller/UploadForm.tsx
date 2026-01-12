@@ -41,7 +41,7 @@ export default function UploadForm() {
     defaultValues: {
       title: "",
       description: "",
-      price: 0,
+      // price: 0,
       mainCategory: "",
       subCategory: "",
     },

@@ -2,8 +2,8 @@ import { Box, Typography, Button, Card, CardContent } from "@mui/material";
 import {AddIcon} from "@/components/icons";
 import { auth } from "@/auth";
 import { getSellerAssets } from "@/actions/seller";
-import AssetsTable from "@/components/seller/AssetsTable";
-import AssetsPagination from "@/components/seller/AssetsPagination";
+import AssetsTable from "@/components/dashboard/AssetsTable";
+import AssetsPagination from "@/components/dashboard/AssetsPagination";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
@@ -19,8 +19,8 @@ export default async function SellerAssetsPage(props: {searchParams: SearchParam
 
   const { assets, totalPages } = await getSellerAssets( session.user.id, page);
 
-  if(page > totalPages) {
-    redirect(`/seller/assets?page=${totalPages}`);
+  if(totalPages > 0 && page > totalPages) {
+    redirect(`/my-assets?page=${totalPages}`);
   }
 
   return (
@@ -32,12 +32,12 @@ export default async function SellerAssetsPage(props: {searchParams: SearchParam
         justifyContent="space-between"
         mb={3}
       >
-        <Typography variant="h5" fontWeight={700}>
+        <Typography variant="h4" fontWeight={600}>
           My Assets
         </Typography>
 
         <Button
-          href="/seller/assets/new"
+          href="/my-assets/new"
           variant="contained"
           startIcon={<AddIcon />}
         >
@@ -53,7 +53,7 @@ export default async function SellerAssetsPage(props: {searchParams: SearchParam
             <Typography color="text.secondary" mb={2}>
               Upload your first asset to start selling.
             </Typography>
-            <Button component={Link} href="/seller/assets/new" variant="contained">
+            <Button component={Link} href="/my-assets/new" variant="contained">
               Upload Asset
             </Button>
           </CardContent>
@@ -69,7 +69,7 @@ export default async function SellerAssetsPage(props: {searchParams: SearchParam
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <AssetsPagination page={page} totalPages={totalPages} />
+        <AssetsPagination page={page} totalPages={totalPages} mainPath="/my-assets" />
       )}
     </Box>
   );

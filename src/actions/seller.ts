@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
 const PAGE_SIZE = 10;
@@ -51,4 +52,50 @@ export async function getRecentAssetsBySeller(sellerId: string) {
       previewUrl: true,
     },
   });
+}
+
+
+export const getSellerStats = async () => {
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== "SELLER") {
+    return {
+      totalAssets: 0,
+      totalSales: 0,
+      totalEarnings: 0,
+    }
+  }
+
+  const [totalAssets, salesData] = await Promise.all([
+    // Total assets uploaded by seller
+    prisma.asset.count({
+      where: {
+        sellerId: user.id,
+      },
+    }),
+
+    // Sales + earnings
+    prisma.purchase.aggregate({
+      where: {
+        asset: {
+          sellerId: user.id,
+        },
+        price: {
+          gt: 0, // only paid purchases
+        },
+      },
+      _count: {
+        id: true,
+      },
+      _sum: {
+        price: true,
+      },
+    }),
+  ])
+
+  return {
+    totalAssets,
+    totalSales: salesData._count.id ?? 0,
+    totalEarnings: salesData._sum.price ?? 0,
+  }
 }

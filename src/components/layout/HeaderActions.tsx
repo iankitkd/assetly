@@ -88,7 +88,7 @@ export default function HeaderActions({
             <IconButton
               color="inherit"
               component={Link}
-              href="/assets/new"
+              href="/my-assets/new"
             >
               <SellIcon />
             </IconButton>
@@ -98,7 +98,7 @@ export default function HeaderActions({
             variant="contained"
             color="primary"
             component={Link}
-            href="/assets/new"
+            href="/my-assets/new"
             startIcon={<SellIcon />}
           >
             Sell

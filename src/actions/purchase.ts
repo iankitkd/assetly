@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
@@ -46,7 +46,7 @@ export const createPurchaseForFreeItems = async () => {
         price: 0,
       })),
     });
-    
+
     const assetIds = order.items.map((el) => el.assetId);
 
     // delete cart
@@ -60,10 +60,101 @@ export const createPurchaseForFreeItems = async () => {
   }
 };
 
-
-export const getPurchase = async ({assetId, userId}: {assetId: string, userId: string}) => {
+export const getPurchase = async ({assetId, userId,}: {assetId: string; userId: string;}) => {
   return await prisma.purchase.findFirst({
     where: { assetId, userId },
     include: { asset: true },
   });
+};
+
+export async function getRecentPurchasedAssets(userId: string) {
+  const purchases = await prisma.purchase.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+    select: {
+      asset: {
+        select: {
+          id: true,
+          title: true,
+          price: true,
+          category: true,
+          salesCount: true,
+          previewUrl: true,
+        },
+      },
+    },
+  });
+
+  return purchases.map((p) => p.asset);
 }
+
+
+const PAGE_SIZE = 10;
+
+export async function getUserLibrary(page: number, take: number = PAGE_SIZE) {
+  const session = await auth();
+  const userId = session?.user.id;
+
+  const skip = (page - 1) * PAGE_SIZE;
+
+  const [purchases, total] = await prisma.$transaction([
+    prisma.purchase.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take,
+      include: {
+        asset: {
+          select: {
+            id: true,
+            title: true,
+            price: true,
+            category: true,
+            previewUrl: true,
+            fileUrl: true,
+            createdAt: true,
+          },
+        },
+      },
+    }),
+
+    prisma.purchase.count({
+      where: { userId },
+    }),
+  ]);
+
+  return {
+    purchases,
+    total,
+    totalPages: Math.ceil(total / PAGE_SIZE),
+  };
+}
+
+export const getBuyerStats = async () => {
+  const session = await auth();
+  const user = session?.user;
+  if (!user) {
+    return {
+      assetsOwned: 0,
+      totalSpent: 0,
+    };
+  }
+
+  const purchaseStats = await prisma.purchase.aggregate({
+    where: {
+      userId: user.id,
+    },
+    _count: {
+      id: true, // number of assets owned
+    },
+    _sum: {
+      price: true, // total money spent
+    },
+  });
+
+  return {
+    assetsOwned: purchaseStats._count.id ?? 0,
+    totalSpent: purchaseStats._sum.price ?? 0,
+  };
+};
