@@ -85,6 +85,7 @@ export default function AssetDetails({
             width={800}
             height={500}
             style={{ width: "100%", height: "auto" }}
+            loading="lazy"
           />
         </Paper>
 

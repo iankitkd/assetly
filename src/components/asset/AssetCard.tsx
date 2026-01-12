@@ -38,6 +38,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
           height="160"
           image={previewUrl}
           alt={title}
+          loading="lazy"
         />
 
         <CardContent>

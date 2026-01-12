@@ -1,7 +1,8 @@
 
 import { getCartCount } from "@/actions/cart";
 import { auth } from "@/auth";
-import Sidebar from "@/components/dashboard/Sidebar";
+import BottomBar from "@/components/dashboard/BottomBar";
+import SideBar from "@/components/dashboard/SideBar";
 import Header from "@/components/layout/Header";
 import { RoleType } from "@/types";
 import { Box, Toolbar, } from "@mui/material";
@@ -14,7 +15,7 @@ export default async function SellerLayout({ children }: { children: React.React
   const serverCartCount = await getCartCount();
 
   return (
-    <Box sx={{ display: "flex", }}>
+    <Box >
       {/* Top AppBar */}
       <Header
         isLoggedIn={isLoggedIn}
@@ -23,13 +24,16 @@ export default async function SellerLayout({ children }: { children: React.React
       />
 
       {/* Sidebar */}
-      <Sidebar role={role as RoleType} />
+      <SideBar role={role as RoleType} />
 
       {/* Main Content */}
-      <Box component="main" sx={{ flexGrow: 1, p: 3, }}>
+      <Box component="main" sx={{ ml: {xs: 0, md: "240px"}, p: 2, pb: { xs: 9, md: 0 } }}>
         <Toolbar />
         {children}
       </Box>
+
+      {/* Bottombar */}
+      <BottomBar role={role as RoleType} />
     </Box>
   );
 }

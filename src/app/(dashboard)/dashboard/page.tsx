@@ -48,7 +48,7 @@ export default async function page() {
       </Box>
 
       {/* Stats */}
-      <Grid container spacing={3}>
+      <Grid container spacing={{xs: 1, md: 4}}>
         <StatCard
           title="Assets Purchased"
           value={stats.assetsOwned}
@@ -68,7 +68,7 @@ export default async function page() {
             Seller Overview
           </Typography>
 
-          <Grid container spacing={3}>
+          <Grid container spacing={{xs: 1, md: 4}}>
             <StatCard
               title="Total Assets"
               value={sellerStats.totalAssets}

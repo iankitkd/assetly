@@ -1,7 +1,7 @@
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Box, Container } from "@mui/material";
+import { Box, Container, Toolbar } from "@mui/material";
 import { auth } from "@/auth";
 import { getCartCount } from "@/actions/cart";
 
@@ -32,6 +32,7 @@ export default async function PublicLayout({ children }: Readonly<{children: Rea
         component="main"
         sx={{ flexGrow: 1, p: 0, minHeight: "100vh" }}
       >
+        <Toolbar />
         {children}
       </Container>
 

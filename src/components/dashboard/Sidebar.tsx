@@ -9,6 +9,8 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -30,11 +32,18 @@ const sellerMenu = [
   { label: "Settings", icon: <SettingsIcon />, path: "/settings" },
 ]
 
-export default function Sidebar({role} : {role: RoleType}) {
+export default function SideBar({role} : {role: RoleType}) {
   const pathname = usePathname();
   const router = useRouter();
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const menuItems = role === "SELLER" ? sellerMenu : baseMenu;
+
+  if(isMobile) {
+    return null;
+  }
 
   return (
     <Drawer

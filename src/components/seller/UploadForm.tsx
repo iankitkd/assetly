@@ -74,7 +74,7 @@ export default function UploadForm() {
       setStatus({success: res.success, message: res.message});
       setOpen(true);
       reset({title: "", description: "", price: 0, mainCategory: "", subCategory: "", preview: undefined, assetFile: undefined});
-      router.push("/seller/assets");
+      router.push("/my-assets");
     } catch (error) {
       console.log(error);
     } finally {

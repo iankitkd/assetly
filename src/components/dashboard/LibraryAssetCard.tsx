@@ -14,6 +14,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import Image from "next/image";
 import NextLink from "next/link";
 import { ASSET_CATEGORIES } from "@/data/asset-categories";
+import { MouseEvent } from "react";
 
 type Props = {
   asset: {
@@ -28,6 +29,19 @@ type Props = {
 };
 
 export default function LibraryAssetCard({ asset, purchasedAt }: Props) {
+
+  const downloadAsset = async (e: MouseEvent, assetId: string) => {
+    e.preventDefault();
+    const res = await fetch(`/api/assets/${assetId}/download`);
+
+    if (!res.ok) {
+      return;
+    }
+
+    const { url } = await res.json();
+    window.location.href = url;
+  };
+
   return (
     <Card
       sx={{
@@ -56,6 +70,7 @@ export default function LibraryAssetCard({ asset, purchasedAt }: Props) {
             alt={asset.title}
             fill
             style={{ objectFit: "cover" }}
+            loading="lazy"
           />
 
           {/* Gradient overlay */}
@@ -117,7 +132,7 @@ export default function LibraryAssetCard({ asset, purchasedAt }: Props) {
             fullWidth
             variant="contained"
             startIcon={<DownloadIcon />}
-            onClick={() => {}}
+            onClick={(e) => downloadAsset(e, asset.id)}
           >
             Download
           </Button>
