@@ -39,6 +39,7 @@ export default function Cart({ items, isLoggedIn }: { items: CartItem[], isLogge
 
     if (!ids.length) {
       setGuestItems([]);
+      setIsLoading(false);
       return;
     }
 

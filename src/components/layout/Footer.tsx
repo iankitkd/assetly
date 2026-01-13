@@ -49,7 +49,7 @@ export default function Footer() {
               <MuiLink component={Link} href="/my-assets/new" underline="hover">
                 Sell Assets
               </MuiLink>
-              <MuiLink component={Link} href="/" underline="hover">
+              <MuiLink component={Link} href="/discover" underline="hover">
                 Categories
               </MuiLink>
             </Box>

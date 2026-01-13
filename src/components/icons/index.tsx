@@ -7,6 +7,7 @@ import {
   ShoppingBag, ShoppingCart, Sort, Tune, ClearAll,
   CurrencyRupee, Menu, Login, Sell, Close, CheckCircleRounded,
   ReceiptLong, Settings, LibraryBooks, Upload, Wallet,
+  AutoAwesomeOutlined, FlashOnOutlined, SecurityOutlined, PublicOutlined,
 } from "@mui/icons-material";
 
 export {
@@ -38,6 +39,10 @@ export {
   Settings as SettingsIcon,
   Wallet as WalletIcon,
   Upload as UploadIcon,
+  AutoAwesomeOutlined as AutoAwesomeOutlinedIcon,
+  FlashOnOutlined as FlashOnOutlinedIcon,
+  SecurityOutlined as SecurityOutlinedIcon,
+  PublicOutlined as PublicOutlinedIcon,
 }
 
 export function GoogleIcon() {

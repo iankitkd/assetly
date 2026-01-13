@@ -4,6 +4,9 @@ import { APP_NAME } from "@/data";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 
+const subHeading = `${APP_NAME} brings creators and buyers together in a secure, easy-to-use place for high-quality digital assets.`
+// const subHeading2 = `${APP_NAME} is a trusted place to buy and sell high-quality digital assets designed for clarity, speed, and reliability.`
+
 export default function HeroSection() {
   return (
     <Box
@@ -22,10 +25,15 @@ export default function HeroSection() {
           variant="h3"
           fontWeight={700}
           letterSpacing={-1}
+          sx={{textAlign: { xs: "inherit", md: "center" } }}
         >
-          A simple marketplace for
+          A simple
+          <Typography component="span" variant="h3" fontWeight={700} letterSpacing={-1} color="primary"> 
+            {" marketplace "}
+          </Typography> 
+          for
           <br />
-          high-quality digital assets
+          digital assets
         </Typography>
 
         <Typography
@@ -34,9 +42,7 @@ export default function HeroSection() {
           color="text.secondary"
           sx={{ lineHeight: 1.7, textAlign: { xs: "inherit", md: "center" } }}
         >
-          {APP_NAME} helps creators sell digital products effortlessly — from
-          design assets to code, templates, and beyond. Built for simplicity,
-          speed, and trust.
+          {subHeading}
         </Typography>
 
         <Stack direction="row" spacing={2}>

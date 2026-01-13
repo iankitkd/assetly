@@ -1,5 +1,6 @@
 "use client"
 
+import { APP_NAME } from "@/data";
 import {
   Box,
   Button,
@@ -10,6 +11,9 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 
+const heading = "Get started with digital assets";
+const subHeading = `Join ${APP_NAME} to publish, discover, and access digital assets through a clear, trusted platform.`;
+
 export default function CTA() {
   return (
     <Box sx={{ py: 4 }}>
@@ -17,11 +21,10 @@ export default function CTA() {
         <Card sx={{ borderRadius: 4 }}>
           <CardContent sx={{ p: { xs: 4, md: 6 }, textAlign: "center" }}>
             <Typography variant="h4" fontWeight={700} gutterBottom>
-              Start building your digital income
+              {heading}
             </Typography>
             <Typography color="text.secondary" sx={{ mb: 4, lineHeight: 1.7 }}>
-              Join Assetly today and turn your digital creations into a
-              sustainable source of income without complexity.
+              {subHeading}
             </Typography>
             <Button
               size="large"

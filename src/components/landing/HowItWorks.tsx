@@ -9,21 +9,24 @@ import {
   Typography,
 } from "@mui/material";
 
+const heading = "How Assetly works";
+const subHeading = "A clear, intuitive workflow designed to support seamless creation, discovery, and access."
+
 const howItWorks = [
   {
     step: "01",
-    title: "Upload your assets",
-    desc: "Add your digital products with detailed descriptions, previews, categories, and pricing. Assetly stores and delivers files securely.",
+    title: "Add digital assets",
+    desc: "Upload assets with clear descriptions, previews, and categories. Files are stored and delivered securely.",
   },
   {
     step: "02",
-    title: "Publish & reach buyers",
-    desc: "Once published, your assets become discoverable to buyers browsing the marketplace. No marketing setup required.",
+    title: "Discover and access",
+    desc: "Assets become available in the marketplace, making it easy to explore and find what you need.",
   },
   {
     step: "03",
-    title: "Sell and earn",
-    desc: "Buyers get instant access after purchase. You track orders, earnings, and performance from a single dashboard.",
+    title: "Complete transactions",
+    desc: "Secure checkout with instant access to purchased assets and a clear overview of activity.",
   },
 ];
 
@@ -32,11 +35,10 @@ export default function HowItWorks() {
     <Container maxWidth="lg" sx={{ py: 12 }}>
       <Stack spacing={2} textAlign="center" mb={8}>
         <Typography variant="h4" fontWeight={700}>
-          How Assetly works
+          {heading}
         </Typography>
         <Typography color="text.secondary">
-          A clear, creator-friendly workflow designed to get you selling quickly
-          without technical friction.
+          {subHeading}
         </Typography>
       </Stack>
 

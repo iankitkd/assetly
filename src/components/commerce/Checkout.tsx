@@ -31,7 +31,7 @@ export default function Checkout({ total }: { total: number }) {
         return;
       }
 
-      // 3️. Paid items → Stripe Checkout
+      // 3️. Paid items - Stripe Checkout
       const checkoutUrl = await createCheckoutSession();
       if (!checkoutUrl) {
         throw new Error("Stripe session creation failed");

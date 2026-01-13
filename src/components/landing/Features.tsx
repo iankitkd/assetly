@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
 import {
+  Box,
   Card,
   CardContent,
   Container,
@@ -8,40 +9,47 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { AutoAwesomeOutlinedIcon, FlashOnOutlinedIcon, PublicOutlinedIcon, SecurityOutlinedIcon } from "@/components/icons";
+
+const heading = "Built for creators and buyers";
+const subHeading = "Everything you need to share, discover, and use digital assets in one simple, transparent platform.";
 
 const features = [
   {
-    title: "Simple asset publishing",
-    desc: "Upload your digital files, add descriptions, previews, categories, and pricing in minutes. Assetly handles file delivery securely and reliably.",
+    title: "Simple asset experience",
+    desc: "A clean, intuitive flow for uploading, browsing, and managing digital assets.",
+    icon: AutoAwesomeOutlinedIcon,
   },
   {
-    title: "Transparent earnings",
-    desc: "Track sales, revenue, and performance in real time. Clear breakdowns help you understand what’s selling and why.",
+    title: "Instant, reliable access",
+    desc: "Seamless checkout and immediate access to purchased assets with no friction.",
+    icon: FlashOnOutlinedIcon,
   },
   {
-    title: "Secure purchases & licensing",
-    desc: "Every purchase is protected with secure checkout and asset access. Buyers receive instant downloads with clear usage rights.",
+    title: "Secure ownership & usage",
+    desc: "Clear licensing, protected files, and secure delivery built into every transaction.",
+    icon: SecurityOutlinedIcon,
   },
   {
-    title: "Designed to scale with you",
-    desc: "Whether you sell one asset or hundreds, Assetly grows with your business — no setup fees, no subscriptions.",
+    title: "Quality marketplace",
+    desc: "Discover and share high-quality digital assets in a trusted global marketplace.",
+    icon: PublicOutlinedIcon,
   },
 ];
 
 export default function Features() {
   return (
-    <Container maxWidth="lg" sx={{ py: 12 }} >
+    <Container maxWidth="lg" sx={{ py: 12 }}>
       <Stack spacing={2} textAlign="center" mb={8}>
         <Typography variant="h4" fontWeight={700}>
-          Built for creators and buyers
+          {heading}
         </Typography>
         <Typography color="text.secondary">
-          Everything you need to publish, sell, and manage digital assets
-          without complexity or hidden costs.
+          {subHeading}
         </Typography>
       </Stack>
 
-      <Grid container spacing={4}>
+      <Grid container spacing={3}>
         {features.map((feature) => (
           <Grid size={{ xs: 12, md: 6 }} key={feature.title}>
             <Card
@@ -51,6 +59,26 @@ export default function Features() {
               }}
             >
               <CardContent sx={{ p: 4 }}>
+                <Box
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mb: 2.5,
+                    backgroundColor: "primary.light",
+                  }}
+                >
+                  <feature.icon
+                    sx={{
+                      fontSize: 26,
+                      color: "primary.main",
+                    }}
+                  />
+                </Box>
+
                 <Typography variant="h6" fontWeight={600} gutterBottom>
                   {feature.title}
                 </Typography>
