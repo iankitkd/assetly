@@ -58,7 +58,7 @@ export default function AssetsTable({ assets }: { assets: Asset[] }) {
                 />
               </TableCell>
               <TableCell>₹{asset.price}</TableCell>
-              <TableCell>{asset.salesCount}</TableCell>
+              <TableCell>{asset.price === 0 ? "-" : asset.salesCount}</TableCell>
               <TableCell align="right">
                 <Button
                   component={Link}

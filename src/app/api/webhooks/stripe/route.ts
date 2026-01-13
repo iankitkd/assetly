@@ -2,6 +2,7 @@ import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { finalizePaidOrder } from "@/actions/purchase";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -35,25 +36,9 @@ export async function POST(req: Request) {
     const session = event.data.object as any;
     const orderId = session.metadata.orderId;
 
-    await prisma.$transaction(async (tx) => {
-      const order = await tx.order.update({
-        where: { id: orderId },
-        data: { status: "PAID" },
-        include: { items: true },
-      });
-
-      await tx.purchase.createMany({
-        data: order.items.map((i) => ({
-          userId: order.userId,
-          assetId: i.assetId,
-          price: i.price,
-        })),
-      });
-
-      await tx.cartItem.deleteMany({
-        where: { userId: order.userId },
-      });
-    });
+    await prisma.$transaction((tx) =>
+      finalizePaidOrder(tx, orderId)
+    );
   }
 
   return NextResponse.json({ received: true });

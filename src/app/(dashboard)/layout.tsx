@@ -2,7 +2,7 @@
 import { getCartCount } from "@/actions/cart";
 import { auth } from "@/auth";
 import BottomBar from "@/components/dashboard/BottomBar";
-// import SideBar from "@/components/dashboard/SideBar";
+import SideBar from "@/components/dashboard/SideBar";
 import Header from "@/components/layout/Header";
 import { RoleType } from "@/types";
 import { Box, Toolbar, } from "@mui/material";
@@ -24,7 +24,7 @@ export default async function SellerLayout({ children }: { children: React.React
       />
 
       {/* Sidebar */}
-      {/* <SideBar role={role as RoleType} /> */}
+      <SideBar role={role as RoleType} />
 
       {/* Main Content */}
       <Box component="main" sx={{ ml: {xs: 0, md: "240px"}, p: 2, pb: { xs: 9, md: 0 } }}>
