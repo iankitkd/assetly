@@ -1,6 +1,6 @@
 "use client";
 
-import { AddBoxIcon, DashboardIcon, InventoryIcon, LibraryBooksIcon, ReceiptLongIcon, SettingsIcon, WalletIcon } from "@/components/icons";
+import { AddBoxIcon, DashboardIcon, InventoryIcon, LibraryBooksIcon, SettingsIcon } from "@/components/icons";
 import { RoleType } from "@/types";
 import {
   Drawer,
@@ -19,7 +19,7 @@ const drawerWidth = 240;
 const baseMenu = [
   { label: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
   { label: "Library", icon: <LibraryBooksIcon />,  path: "/library" },
-  { label: "Orders", icon: <ReceiptLongIcon />, path: "/orders" },
+  // { label: "Orders", icon: <ReceiptLongIcon />, path: "/orders" },
   { label: "Settings", icon: <SettingsIcon />, path: "/settings" },
 ]
 
@@ -28,7 +28,7 @@ const sellerMenu = [
   { label: "Library", icon: <LibraryBooksIcon />,  path: "/library" },
   { label: "My Assets", icon: <InventoryIcon />, path: "/my-assets" },
   { label: "Upload Asset", icon: <AddBoxIcon />, path: "/my-assets/new" },
-  { label: "Earnings", icon: <WalletIcon />, path: "/earnings" },
+  // { label: "Earnings", icon: <WalletIcon />, path: "/earnings" },
   { label: "Settings", icon: <SettingsIcon />, path: "/settings" },
 ]
 

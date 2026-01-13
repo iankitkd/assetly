@@ -17,7 +17,9 @@ export default function Footer() {
       sx={{
         mt: 8,
         py: 4,
-        backgroundColor: "background.paper",
+        backgroundColor: "grey.900", 
+        color: "grey.400",
+        // backgroundColor: "background.paper",
         borderTop: "1px solid",
         borderColor: "divider",
       }}
@@ -26,10 +28,10 @@ export default function Footer() {
         <Grid container spacing={4} columns={12}>
           {/* Brand */}
           <Grid size={{ xs: 12, sm: 4 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" color="#ffffff" gutterBottom>
               {APP_NAME}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" >
               A marketplace for high-quality digital assets created by
               professionals.
             </Typography>
@@ -41,13 +43,13 @@ export default function Footer() {
               Marketplace
             </Typography>
             <Box display="flex" flexDirection="column" gap={1}>
-              <MuiLink component={Link} href="/" underline="hover">
+              <MuiLink component={Link} href="/discover" underline="hover">
                 Browse Assets
               </MuiLink>
-              <MuiLink component={Link} href="/sell" underline="hover">
+              <MuiLink component={Link} href="/my-assets/new" underline="hover">
                 Sell Assets
               </MuiLink>
-              <MuiLink component={Link} href="/categories" underline="hover">
+              <MuiLink component={Link} href="/" underline="hover">
                 Categories
               </MuiLink>
             </Box>
@@ -59,10 +61,10 @@ export default function Footer() {
               Legal
             </Typography>
             <Box display="flex" flexDirection="column" gap={1}>
-              <MuiLink component={Link} href="/terms" underline="hover">
+              <MuiLink component={Link} href="/" underline="hover">
                 Terms of Service
               </MuiLink>
-              <MuiLink component={Link} href="/privacy" underline="hover">
+              <MuiLink component={Link} href="/" underline="hover">
                 Privacy Policy
               </MuiLink>
             </Box>
@@ -75,11 +77,11 @@ export default function Footer() {
             mt: 4,
             pt: 2,
             borderTop: "1px solid",
-            borderColor: "divider",
+            borderColor: "text.secondary",
             textAlign: "center",
           }}
         >
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2">
             © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
           </Typography>
         </Box>

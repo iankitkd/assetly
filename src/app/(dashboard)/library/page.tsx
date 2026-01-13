@@ -18,7 +18,7 @@ export default async function LibraryPage(props : {searchParams: SearchParams}) 
 
   return (
     <Box>
-      <Typography variant="h4" fontWeight={600} mb={4}>
+      <Typography variant="h5" fontWeight={600} mb={4}>
         Your Library
       </Typography>
 

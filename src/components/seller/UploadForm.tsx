@@ -86,7 +86,7 @@ export default function UploadForm() {
   return (
     <Card sx={{ maxWidth: 760, mx: "auto", borderRadius: 3 }}>
       <CardHeader
-        title={<Typography fontWeight={700}>Upload New Asset</Typography>}
+        title={<Typography fontWeight={600} variant="h5">Upload New Asset</Typography>}
         subheader="Add a digital product to sell on Assetly"
       />
       <Divider />
@@ -174,6 +174,7 @@ export default function UploadForm() {
                 variant="outlined"
                 fullWidth
                 startIcon={<CloudUploadIcon />}
+                size="small"
                 sx={{ py: 2, borderStyle: "dashed", borderRadius: 2, }}
               >
                 {previewName ?? "Upload Preview Image (JPG, PNG)"}
@@ -223,6 +224,7 @@ export default function UploadForm() {
                 component="label"
                 variant="outlined"
                 fullWidth
+                size="small"
                 startIcon={<CloudUploadIcon />}
                 sx={{ py: 2, borderStyle: "dashed", borderRadius: 2,}}
               >

@@ -32,13 +32,14 @@ export default async function SellerAssetsPage(props: {searchParams: SearchParam
         justifyContent="space-between"
         mb={3}
       >
-        <Typography variant="h4" fontWeight={600}>
+        <Typography variant="h5" fontWeight={600}>
           My Assets
         </Typography>
 
         <Button
           href="/my-assets/new"
           variant="contained"
+          size="small"
           startIcon={<AddIcon />}
         >
           Upload Asset
