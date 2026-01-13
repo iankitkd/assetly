@@ -1,5 +1,11 @@
 export type RoleType = "USER" | "SELLER";
 
+export interface UserType {
+  name: string;
+  email: string;
+  role: RoleType;
+}
+
 export interface Asset {
   id: string;
   title: string;

@@ -19,7 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ASSET_CATEGORIES_LIST } from "@/data/asset-categories";
 import { assetSchema, AssetValues } from "@/lib/validators";
-import { uploadAsset } from "@/actions/upload-asset";
+import { uploadAsset } from "@/actions/uploadAsset";
 import AlertSnackbar from "@/components/shared/AlertSnackbar";
 import { useRouter } from "next/navigation";
 
