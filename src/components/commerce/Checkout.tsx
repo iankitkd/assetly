@@ -7,36 +7,32 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { createCheckoutSession } from "@/actions/stripeSession";
+import { createCheckoutSession, createCheckoutSessionForCart } from "@/actions/stripeSession";
 import { useState } from "react";
-import { createPurchaseForFreeItems } from "@/actions/purchase";
-import { useRouter } from "next/navigation";
 
-export default function Checkout({ total }: { total: number }) {
+export default function Checkout({ total, assetId }: { total: number, assetId?: string }) {
   const [isLoading, setIsLoading] = useState(false);
-
-  const router = useRouter();
 
   const pay = async () => {
     if (isLoading) return;
     setIsLoading(true);
 
     try {
-      // 1️. Create purchases for FREE items
-      await createPurchaseForFreeItems();
-
-      // 2️. If no paid items - go directly to success
-      if (total === 0) {
-        router.push("/checkout/success?free=true");
+      // stripe checkout for given assetId
+      if(assetId) {
+        const checkoutUrl = await createCheckoutSession([assetId]);
+        if (!checkoutUrl) {
+          throw new Error("Stripe session creation failed");
+        }
+        window.location.href = checkoutUrl;
         return;
       }
 
-      // 3️. Paid items - Stripe Checkout
-      const checkoutUrl = await createCheckoutSession();
+      // stripe Checkout for cart
+      const checkoutUrl = await createCheckoutSessionForCart();
       if (!checkoutUrl) {
         throw new Error("Stripe session creation failed");
       }
-
       window.location.href = checkoutUrl;
     } catch (error) {
       console.error("Checkout error:", error);

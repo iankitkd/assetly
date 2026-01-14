@@ -18,6 +18,7 @@ import AlertSnackbar from "@/components/shared/AlertSnackbar";
 import { useState } from "react";
 import { addToGuestCart, isInGuestCart } from "@/utils/cartStorage";
 import { useCartStore } from "@/store/cartStore";
+import { createPurchaseForFreeItem } from "@/actions/purchase";
 
 type Props = {
   asset: any;
@@ -38,10 +39,11 @@ export default function AssetDetails({
 
   const [isInCartStatus, setIsInCartStatus] = useState(isLoggedIn ? isInCart : isInGuestCart(asset.id));
 
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<{success: boolean, message: string}>({success: false, message: ""});
   const [open, setOpen] = useState(false);
-
+  const router = useRouter();
+  
   const addToCartHandler = async () => {
     if(isInCartStatus) {
       router.push("/cart");
@@ -62,17 +64,35 @@ export default function AssetDetails({
   }
 
   const downloadAsset = async (assetId: string) => {
+    setIsLoading(true);
     const res = await fetch(`/api/assets/${assetId}/download`);
 
     if (!res.ok) {
+      setIsLoading(false);
       setStatus({success: false, message: "You are not allowed to download this asset"})
       setOpen(true);
       return;
     }
-
+    
     const { url } = await res.json();
     window.location.href = url;
+    setIsLoading(false);
   };
+
+  // buy now for free item
+  const buyNowHandler = async (assetId: string) => {
+    if(!isLoggedIn) {
+      router.push(`/login?callbackUrl=/assets/${assetId}`);
+      return;
+    }
+
+    setIsLoading(true);
+    const res = await createPurchaseForFreeItem(assetId);
+    setStatus({success: res.success, message: res.message})
+    setOpen(true);
+    router.refresh();
+    setIsLoading(false);
+  }
 
   return (
     <Box maxWidth="xl" sx={{ mx: "auto", py: 5, px: 2 }}>
@@ -124,7 +144,7 @@ export default function AssetDetails({
 
           <Divider sx={{ my: 3 }} />
 
-          {!canDownload && (
+          {(!canDownload && (asset.price > 0 ? (
             <Stack spacing={1.5}>
               <Button
                 size="large"
@@ -136,7 +156,7 @@ export default function AssetDetails({
                 {isInCartStatus ? "Go to Cart" : "Add to Cart"}
               </Button>
 
-              {/* <Button
+              <Button
                 size="large"
                 fullWidth
                 variant="outlined"
@@ -144,9 +164,20 @@ export default function AssetDetails({
                 href={`/checkout/?id=${asset.id}`}
               >
                 Buy Now
-              </Button> */}
+              </Button>
             </Stack>
-          )}
+          ) : (
+            <Button
+              size="large"
+              fullWidth
+              variant="contained"
+              startIcon={<ShoppingBagIcon />}
+              loading={isLoading}
+              onClick={() => buyNowHandler(asset.id)}
+            >
+              Buy Now
+            </Button>
+          )))}
 
           {canDownload && (
             <Button
@@ -154,6 +185,7 @@ export default function AssetDetails({
               fullWidth
               variant="contained"
               startIcon={<DownloadIcon />}
+              loading={isLoading}
               onClick={() => downloadAsset(asset.id)}
             >
               Download Asset

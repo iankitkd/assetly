@@ -1,5 +1,6 @@
 "use server";
 
+import { getAssetDetails } from "@/actions/asset";
 import { auth } from "@/auth";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -31,7 +32,7 @@ export async function finalizePaidOrder( tx: TxClient, orderId: string ) {
     })),
   });
 
-  // Deduplicate assetIds
+  // Duplicate assetIds
   const assetIds = order.items.map((i) => i.assetId);
 
   // Increment sales count
@@ -46,15 +47,15 @@ export async function finalizePaidOrder( tx: TxClient, orderId: string ) {
 
   // Clear cart
   await tx.cartItem.deleteMany({
-    where: { userId: order.userId },
+    where: { userId: order.userId, assetId: {in: assetIds} },
   });
 
   return order;
 }
 
-
-export const createPurchaseForFreeItems = async () => {
+export const createPurchaseForFreeItem = async (assetId: string) => {
   try {
+    // authorise
     const session = await auth();
     const userId = session?.user.id;
 
@@ -62,53 +63,47 @@ export const createPurchaseForFreeItems = async () => {
       return { success: false, message: "Unauthorized" };
     }
 
-    // get cart items
-    const cartItems = await prisma.cartItem.findMany({
-      where: { userId: session.user.id, asset: { price: 0 } },
-      include: { asset: true },
-    });
+    // find asset
+    const {asset} = await getAssetDetails(assetId);
+    if(!asset) {
+      return { success: false, message: "Asset not found" };
+    }
 
-    if (cartItems.length == 0) {
-      return { success: false, message: "No free asset in cart found" };
+    if(asset.price !== 0) {
+      return { success: false, message: "Asset is not free" };
     }
 
     // create order
     const order = await prisma.order.create({
       data: {
-        userId: session.user.id,
+        userId,
         totalAmount: 0,
         status: "PAID",
         items: {
-          create: cartItems.map((item) => ({
-            assetId: item.assetId,
-            price: item.asset.price,
-          })),
+          create: {
+            assetId: assetId,
+            price: 0,
+          },
         },
       },
       include: { items: true },
     });
 
     // create purchase
-    await prisma.purchase.createMany({
-      data: order.items.map((i) => ({
-        userId: userId,
-        assetId: i.assetId,
+    await prisma.purchase.create({
+      data: {
+        userId,
+        assetId,
         price: 0,
-      })),
-    });
-
-    const assetIds = order.items.map((el) => el.assetId);
-
-    // delete cart
-    await prisma.cartItem.deleteMany({
-      where: { userId: userId, assetId: { in: assetIds } },
+      },
     });
 
     return { success: true, message: "Purchase created" };
   } catch (error) {
+    console.log(error);
     return { success: false, message: "Something went wrong" };
   }
-};
+}
 
 export const getPurchase = async ({assetId, userId,}: {assetId: string; userId: string;}) => {
   return await prisma.purchase.findFirst({

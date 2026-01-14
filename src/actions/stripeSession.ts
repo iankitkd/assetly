@@ -6,19 +6,23 @@ import { stripe } from "@/lib/stripe";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
-export async function createCheckoutSession() {
+export async function createCheckoutSession(assetIds : string[]) {
   const session = await auth();
   if (!session?.user) throw new Error("Unauthorized");
 
-  const cartItems = await prisma.cartItem.findMany({
-    where: { userId: session.user.id, asset: {price: {gt: 0}} },
-    include: { asset: true },
+  const assets = await prisma.asset.findMany({
+    where: {id: {in: assetIds}},
+    select: {
+      id: true,
+      title: true,
+      price: true,
+      previewUrl: true,
+    }
   });
 
+  if (!assets.length) throw new Error("No assets");
 
-  if (!cartItems.length) throw new Error("Cart empty");
-
-  const total = cartItems.reduce((sum, i) => sum + i.asset.price, 0);
+  const total = assets.reduce((sum, i) => sum + i.price, 0);
 
   // 1️. Create Order
   const order = await prisma.order.create({
@@ -27,9 +31,9 @@ export async function createCheckoutSession() {
       totalAmount: total,
       status: "PENDING",
       items: {
-        create: cartItems.map((item) => ({
-          assetId: item.assetId,
-          price: item.asset.price,
+        create: assets.map((item) => ({
+          assetId: item.id,
+          price: item.price,
         })),
       },
     },
@@ -39,11 +43,11 @@ export async function createCheckoutSession() {
   const checkoutSession = await stripe.checkout.sessions.create({
     mode: "payment",
     payment_method_types: ["card"],
-    line_items: cartItems.map((item) => ({
+    line_items: assets.map((item) => ({
       price_data: {
         currency: "inr",
-        product_data: { name: item.asset.title, images: [item.asset.previewUrl] },
-        unit_amount: item.asset.price * 100,
+        product_data: { name: item.title, images: [item.previewUrl] },
+        unit_amount: item.price * 100,
       },
       quantity: 1,
     })),
@@ -64,6 +68,21 @@ export async function createCheckoutSession() {
   });
 
   return checkoutSession.url;
+}
+
+export async function createCheckoutSessionForCart() {
+  const session = await auth();
+  if (!session?.user) throw new Error("Unauthorized");
+
+  const cartItems = await prisma.cartItem.findMany({
+    where: { userId: session.user.id },
+    select: { assetId: true },
+  });
+
+  if (!cartItems.length) throw new Error("Cart empty");
+
+  const assetIds = cartItems.map((item) => item.assetId);
+  return await createCheckoutSession(assetIds);
 }
 
 
