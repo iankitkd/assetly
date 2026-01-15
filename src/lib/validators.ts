@@ -27,11 +27,11 @@ export const signupSchema = z.object({
 
 export const assetSchema = z.object({
   title: z.string().min(3, "Title is too short"),
-  description: z.string().min(10, "Description is required"),
+  description: z.string().min(10, "Description is too short"),
   price: z.number("Price is required").min(0, "Price must be greater than or equal to 0"),
   mainCategory: z.string().min(1, "Category is required"),
   subCategory: z.string().min(1, "SubCategory is required"),
-  preview: z
+  previewFile: z
     .custom<FileList>()
     .refine((files) => files?.length === 1, "Preview image is required")
     .refine(
@@ -53,6 +53,16 @@ export const assetSchema = z.object({
       (files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
       "Only ZIP or PDF file is allowed"
     ),
+});
+
+export const assetServerSchema = z.object({
+  title: z.string().min(3),
+  description: z.string().min(10),
+  price: z.number().min(0),
+  mainCategory: z.string().min(1),
+  subCategory: z.string().min(1),
+  previewUrl: z.url(),
+  assetPath: z.string().min(10),
 });
 
 

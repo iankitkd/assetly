@@ -19,9 +19,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ASSET_CATEGORIES_LIST } from "@/data/asset-categories";
 import { assetSchema, AssetValues } from "@/lib/validators";
-import { uploadAsset } from "@/actions/uploadAsset";
 import AlertSnackbar from "@/components/shared/AlertSnackbar";
 import { useRouter } from "next/navigation";
+import { ASSET_BUCKET, ASSET_PREVIEW_BUCKET } from "@/data";
+import { getPublicUrl } from "@/lib/storage";
+import { uploadWithSignedUrl } from "@/lib/client/uploads";
 
 export default function UploadForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +50,7 @@ export default function UploadForm() {
   });
 
   const mainCategory = watch("mainCategory");
-  const previewName = watch("preview")?.[0]?.name;
+  const previewName = watch("previewFile")?.[0]?.name;
   const assetFileName = watch("assetFile")?.[0]?.name;
 
   const selectedCategory = useMemo(
@@ -56,32 +58,51 @@ export default function UploadForm() {
     [mainCategory]
   );
 
-
   const onSubmit = async (values: AssetValues) => {
     try {
       setIsLoading(true);
-      const formData = new FormData();
+      const previewFile = values.previewFile[0];
+      const assetFile = values.assetFile[0];
 
-      Object.entries(values).forEach(([key, value]) => {
-        if (value instanceof FileList) {
-          formData.append(key, value[0]);
-        } else {
-          formData.append(key, String(value));
-        }
-      });
+      // 1️. Upload preview
+      const previewPath = await uploadWithSignedUrl(ASSET_PREVIEW_BUCKET, previewFile);
+
+      // 2️. Upload asset
+      const assetPath = await uploadWithSignedUrl(ASSET_BUCKET, assetFile);
       
-      const res = await uploadAsset(formData);
-      setStatus({success: res.success, message: res.message});
+      // 3️. Get preview URL
+      const previewUrl = await getPublicUrl(ASSET_PREVIEW_BUCKET, previewPath);
+
+      // 4️. Send metadata
+      const res = await fetch("/api/assets/new", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: values.title,
+          description: values.description,
+          price: values.price,
+          mainCategory: values.mainCategory,
+          subCategory: values.subCategory,
+          previewUrl,
+          assetPath,
+        }),
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.message);
+
+      setStatus({ success: true, message: "Asset published successfully" });
       setOpen(true);
-      reset({title: "", description: "", price: 0, mainCategory: "", subCategory: "", preview: undefined, assetFile: undefined});
+      reset();
       router.push("/my-assets");
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      setStatus({ success: false, message: "Upload failed" });
+      setOpen(true);
     } finally {
       setIsLoading(false);
     }
   };
-
 
   return (
     <Card sx={{ maxWidth: 760, mx: "auto", borderRadius: 3 }}>
@@ -178,12 +199,12 @@ export default function UploadForm() {
                 sx={{ py: 2, borderStyle: "dashed", borderRadius: 2, }}
               >
                 {previewName ?? "Upload Preview Image (JPG, PNG)"}
-                <input hidden type="file" accept="image/*" {...register("preview")} />
+                <input hidden type="file" accept="image/*" {...register("previewFile")} />
               </Button>
 
-              <Typography variant="caption" color={errors.preview ? "error": "text.secondary"}>
-                {errors.preview 
-                  ? errors.preview.message as String
+              <Typography variant="caption" color={errors.previewFile ? "error": "text.secondary"}>
+                {errors.previewFile
+                  ? errors.previewFile.message as String
                   : "JPG or PNG • Recommended size: 1200x800 px"
                 }
               </Typography>
@@ -201,7 +222,7 @@ export default function UploadForm() {
                   }}
                 >
                   <img
-                    src={URL.createObjectURL(watch("preview")[0])}
+                    src={URL.createObjectURL(watch("previewFile")[0])}
                     alt="Preview"
                     style={{
                       width: "100%",

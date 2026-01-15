@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { getPublicUrl, uploadFile } from "@/lib/storage";
 import { assetSchema } from "@/lib/validators";
 
+// not using this upload method, directly from server to storage
 export async function uploadAsset(formData: FormData) {
   try {
     const session = await auth();
