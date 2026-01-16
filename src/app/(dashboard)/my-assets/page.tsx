@@ -3,7 +3,7 @@ import {AddIcon} from "@/components/icons";
 import { auth } from "@/auth";
 import { getSellerAssets } from "@/actions/seller";
 import AssetsTable from "@/components/dashboard/AssetsTable";
-import AssetsPagination from "@/components/dashboard/AssetsPagination";
+import AssetsPagination from "@/components/shared/AssetsPagination";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 

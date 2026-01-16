@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { SortTypes } from "@/data";
 import { auth } from "@/auth";
 
+const PAGE_SIZE = 9;
+
 export interface SearchProps {
   q?: string;
   sort?: SortTypes;
@@ -9,6 +11,8 @@ export interface SearchProps {
   subCategory?: string | null;
   priceMin?: number;
   priceMax?: number;
+  page?: number;
+  take?: number;
 }
 
 export const getLatestAssets = async ({
@@ -18,8 +22,10 @@ export const getLatestAssets = async ({
   subCategory,
   priceMin,
   priceMax,
+  page,
+  take = PAGE_SIZE
 }: SearchProps) => {
-  /* WHERE clause */
+  // WHERE clause
   const where: any = {};
 
   if (q) {
@@ -48,7 +54,7 @@ export const getLatestAssets = async ({
     };
   }
 
-  /* ORDER BY */
+  // ORDER BY
   let orderBy: Object;
 
   switch (sort) {
@@ -70,14 +76,28 @@ export const getLatestAssets = async ({
       break;
   }
 
-  /* QUERY */
-  const assets = await prisma.asset.findMany({
-    where,
-    orderBy,
-    take: 12,
-  });
+  // SKIP
+  const skip = page ? (page - 1) * PAGE_SIZE : 0;
 
-  return assets;
+  // QUERY
+  const [assets, total] = await prisma.$transaction([
+    prisma.asset.findMany({
+      where,
+      orderBy,
+      skip,
+      take,
+    }),
+
+    prisma.asset.count({
+      where,
+    }),
+  ]);
+
+  return {
+    assets,
+    total,
+    totalPages: Math.ceil(total / PAGE_SIZE),
+  };
 };
 
 

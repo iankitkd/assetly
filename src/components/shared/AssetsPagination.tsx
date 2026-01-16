@@ -26,6 +26,8 @@ export default function AssetsPagination({ page, totalPages, mainPath }: Props) 
         page={page}
         onChange={handleChange}
         color="primary"
+        variant="outlined"
+        shape="rounded"
       />
     </Box>
   );

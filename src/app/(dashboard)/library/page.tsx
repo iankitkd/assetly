@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { getUserLibrary } from "@/actions/purchase";
 import LibraryAssetCard from "@/components/dashboard/LibraryAssetCard";
-import AssetsPagination from "@/components/dashboard/AssetsPagination";
+import AssetsPagination from "@/components/shared/AssetsPagination";
 import { redirect } from "next/navigation";
 
 type SearchParams = Promise<{[key: string] : string}>;
