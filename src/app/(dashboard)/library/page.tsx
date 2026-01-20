@@ -1,8 +1,8 @@
 import { Box, Grid, Typography } from "@mui/material";
-import { getUserLibrary } from "@/actions/purchase";
 import LibraryAssetCard from "@/components/dashboard/LibraryAssetCard";
 import AssetsPagination from "@/components/shared/AssetsPagination";
 import { redirect } from "next/navigation";
+import { getMyLibrary } from "@/actions/buyer";
 
 type SearchParams = Promise<{[key: string] : string}>;
 
@@ -10,7 +10,7 @@ export default async function LibraryPage(props : {searchParams: SearchParams}) 
   const searchParams = await props.searchParams;
   let page = Math.max(1, Number(searchParams.page) || 1);
 
-  const {purchases, totalPages} = await getUserLibrary(page);
+  const {purchases, totalPages} = await getMyLibrary(page);
 
   if(totalPages > 0 && page > totalPages) {
     redirect(`/library?page=${totalPages}`);

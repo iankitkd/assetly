@@ -1,59 +1,27 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { getRecentUploadedAssets, getSellerAssets, getSellerStatsService } from "@/services/seller";
 
-const PAGE_SIZE = 10;
+export const getMyAssets = async (page: number) => {
+  const session = await auth();
+  const sellerId = session?.user.id;
 
-export async function getSellerAssets(
-  sellerId: string,
-  page: number,
-  take: number = PAGE_SIZE,
-) {
-  const skip = (page - 1) * PAGE_SIZE;
+  if (!sellerId) {
+    return { assets: [], total: 0, totalPages: 0 };
+  }
 
-  const [assets, total] = await prisma.$transaction([
-    prisma.asset.findMany({
-      where: { sellerId },
-      orderBy: { createdAt: "desc" },
-      skip,
-      take,
-      select: {
-        id: true,
-        title: true,
-        category: true,
-        price: true,
-        salesCount: true,
-        previewUrl: true,
-      },
-    }),
+  return getSellerAssets(sellerId, page);
+};
 
-    prisma.asset.count({
-      where: { sellerId },
-    }),
-  ]);
+export async function getMyRecentUploadedAssets() {
+  const session = await auth();
+  const sellerId = session?.user.id;
 
-  return {
-    assets,
-    total,
-    totalPages: Math.ceil(total / PAGE_SIZE),
-  };
+  if (!sellerId) {
+    return [];
+  }
+
+  return getRecentUploadedAssets(sellerId);
 }
-
-export async function getRecentAssetsBySeller(sellerId: string) {
-  return prisma.asset.findMany({
-    where: { sellerId },
-    orderBy: { createdAt: "desc" },
-    take: 5,
-    select: {
-      id: true,
-      title: true,
-      price: true,
-      category: true,
-      salesCount: true,
-      previewUrl: true,
-    },
-  });
-}
-
 
 export const getSellerStats = async () => {
   const session = await auth();
@@ -66,36 +34,5 @@ export const getSellerStats = async () => {
     }
   }
 
-  const [totalAssets, salesData] = await Promise.all([
-    // Total assets uploaded by seller
-    prisma.asset.count({
-      where: {
-        sellerId: user.id,
-      },
-    }),
-
-    // Sales + earnings
-    prisma.purchase.aggregate({
-      where: {
-        asset: {
-          sellerId: user.id,
-        },
-        price: {
-          gt: 0, // only paid purchases
-        },
-      },
-      _count: {
-        id: true,
-      },
-      _sum: {
-        price: true,
-      },
-    }),
-  ])
-
-  return {
-    totalAssets,
-    totalSales: salesData._count.id ?? 0,
-    totalEarnings: salesData._sum.price ?? 0,
-  }
+  return getSellerStatsService(user.id);
 }

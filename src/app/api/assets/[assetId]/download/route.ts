@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { createSignedUrl } from "@/lib/storage";
 import { ASSET_BUCKET } from "@/data";
-import { getPurchase } from "@/actions/purchase";
+import { hasUserPurchasedAsset } from "@/services/purchase";
 
 type Params = Promise<{ assetId: string }>
 
@@ -18,7 +18,7 @@ export async function GET( req: NextRequest, segmentData: { params: Params } ) {
   }
 
   // 1. Check purchase
-  const purchase = await getPurchase({assetId, userId});
+  const purchase = await hasUserPurchasedAsset({assetId, userId});
 
   if (!purchase) {
     return NextResponse.json(

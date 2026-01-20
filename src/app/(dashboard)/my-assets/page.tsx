@@ -1,7 +1,6 @@
 import { Box, Typography, Button, Card, CardContent } from "@mui/material";
 import {AddIcon} from "@/components/icons";
-import { auth } from "@/auth";
-import { getSellerAssets } from "@/actions/seller";
+import { getMyAssets } from "@/actions/seller";
 import AssetsTable from "@/components/dashboard/AssetsTable";
 import AssetsPagination from "@/components/shared/AssetsPagination";
 import { redirect } from "next/navigation";
@@ -14,10 +13,7 @@ export default async function SellerAssetsPage(props: {searchParams: SearchParam
   const searchParams = await props.searchParams;
   let page = Math.max(1, Number(searchParams.page) || 1);
 
-  const session = await auth();
-  if (!session?.user?.id) throw new Error("Unauthorized");
-
-  const { assets, totalPages } = await getSellerAssets( session.user.id, page);
+  const { assets, totalPages } = await getMyAssets(page);
 
   if(totalPages > 0 && page > totalPages) {
     redirect(`/my-assets?page=${totalPages}`);

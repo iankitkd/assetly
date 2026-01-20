@@ -1,7 +1,7 @@
 "use server"
 
 import { signIn } from "@/auth";
-import { createUser, getUserByEmail } from "@/actions/user";
+import { createUser, getUserByEmail } from "@/services/user";
 import { signupSchema, SignupValues } from "@/lib/validators";
 import { hashPassword } from "@/lib/password";
 

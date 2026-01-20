@@ -12,10 +12,10 @@ import {
   Typography,
 } from "@mui/material";
 import { RoleType } from "@/types";
-import { updateUserRole } from "@/actions/user";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { updateUserRole } from "@/actions/user";
 
 export default function RoleForm() {
   const [role, setRole] = useState<RoleType>("USER");

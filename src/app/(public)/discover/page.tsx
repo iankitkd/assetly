@@ -1,11 +1,12 @@
 export const dynamic = "force-dynamic";
+// export const revalidate = 60; // seconds
 
 import { Suspense } from "react";
 import { Box } from "@mui/material";
 import CategoryBar from "@/components/discover/CategoryBar";
 import DiscoverFilters from "@/components/discover/DiscoverFilters";
 import AssetGrid from "@/components/asset/AssetGrid";
-import { getLatestAssets } from "@/actions/asset";
+import { searchAssets } from "@/services/asset";
 import { PRICE_MAX, PRICE_MIN, SortTypes } from "@/data";
 import { redirect } from "next/navigation";
 import AssetsPagination from "@/components/shared/AssetsPagination";
@@ -23,7 +24,7 @@ export default async function DiscoverPage(props: {searchParams: SearchParams}) 
   const priceMax = Number(searchParams.priceMax ?? PRICE_MAX);
   const page = Math.max(1, Number(searchParams.page) || 1);
   
-  const {assets, totalPages} = await getLatestAssets({q, sort: sort as SortTypes, category, subCategory, priceMin, priceMax, page});
+  const {assets, totalPages} = await searchAssets({q, sort: sort as SortTypes, category, subCategory, priceMin, priceMax, page});
   
   if(totalPages > 0 && page > totalPages) {
     const params = new URLSearchParams(searchParams);

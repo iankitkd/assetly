@@ -2,7 +2,7 @@ import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { finalizePaidOrder } from "@/actions/purchase";
+import { finalizePaidOrder } from "@/services/order";
 
 export async function POST(req: Request) {
   const body = await req.text();

@@ -5,7 +5,7 @@ vi.mock("@/auth", () => ({
   auth: vi.fn(),
 }));
 
-import { finalizePaidOrder } from "@/actions/purchase"
+import { finalizePaidOrder } from "@/services/order";
 
 /**
  * Mock Prisma Transaction Client

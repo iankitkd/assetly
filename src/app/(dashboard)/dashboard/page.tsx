@@ -11,14 +11,15 @@ import {
 import StatCard from "@/components/dashboard/StatCard";
 import AssetsTable from "@/components/dashboard/AssetsTable";
 import { auth } from "@/auth";
-import { getRecentAssetsBySeller, getSellerStats } from "@/actions/seller";
+import { getMyRecentUploadedAssets, getSellerStats } from "@/actions/seller";
 import {
   InventoryIcon,
   LibraryBooksIcon,
   SellIcon,
   WalletIcon,
 } from "@/components/icons";
-import { getBuyerStats, getRecentPurchasedAssets } from "@/actions/purchase";
+import { getMyRecentPurchasedAssets } from "@/actions/buyer";
+import { getBuyerStats } from "@/actions/buyer";
 
 export default async function page() {
   const session = await auth();
@@ -28,12 +29,20 @@ export default async function page() {
     throw new Error("Unauthorized");
   }
 
-  const [assets, purchasedAssets, stats, sellerStats] = await Promise.all([
-    getRecentAssetsBySeller(user.id),
-    getRecentPurchasedAssets(user.id),
+  const [purchasedAssets, stats] = await Promise.all([
+    getMyRecentPurchasedAssets(),
     getBuyerStats(),
-    getSellerStats(),
   ]);
+
+  let assets : any = [];
+  let sellerStats = {totalSales: 0, totalAssets: 0, totalEarnings: 0};
+
+  if(user.role === "SELLER") {
+    [assets, sellerStats] = await Promise.all([
+      getMyRecentUploadedAssets(),
+      getSellerStats(),
+    ]);
+  }
 
   return (
     <Stack spacing={4}>
@@ -62,6 +71,7 @@ export default async function page() {
         />
       </Grid>
 
+      {/* Seller stats */}
       {user.role === "SELLER" && (
         <Box>
           <Typography variant="h6" mb={2}>

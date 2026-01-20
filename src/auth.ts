@@ -3,7 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials"
 import Google from "next-auth/providers/google"
 
-import { getUserByEmail } from "@/actions/user";
+import { getUserByEmail } from "@/services/user";
 import { prisma } from "@/lib/prisma";
 import { verifyPassword } from "@/lib/password";
 import { loginSchema } from "@/lib/validators";

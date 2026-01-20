@@ -1,3 +1,5 @@
+export const revalidate = 120; // seconds
+
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import AssetDetails from "@/components/asset/AssetDetails";
