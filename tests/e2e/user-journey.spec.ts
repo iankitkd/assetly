@@ -1,6 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { loginAsBuyer } from "../../playwright/auth.utils";
 
+const isCI = !!process.env.CI;
+
 test.describe("User journey", () => {
   test("user can browse asset, add to cart, login, and reach checkout", async ({ page }) => {
     // 1️. --- Discover page ---
@@ -60,6 +62,19 @@ test.describe("User journey", () => {
 
     // Assert checkout page
     await page.waitForSelector("[data-testid='checkout-page']");
+
+
+    // --- Skip Stripe & Library in CI ---
+    if (isCI) {
+      test.info().annotations.push({
+        type: "skipped-step",
+        description: "Stripe checkout & library skipped in CI (external dependency)",
+      });
+
+      // Assert checkout page loaded correctly
+      await expect(page.getByRole("button", { name: /pay securely/i })).toBeVisible();
+      return;
+    }
 
 
     // 6️. --- Click Pay Securely (Stripe redirect) ---
