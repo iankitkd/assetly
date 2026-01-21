@@ -97,7 +97,7 @@ export default function Cart({ items, isLoggedIn }: { items: CartItem[], isLogge
   };
 
   return (
-    <Stack direction={{ xs: "column", md: "row" }} spacing={4}>
+    <Stack direction={{ xs: "column", md: "row" }} spacing={4} data-testid='cart-page'>
       {/* Cart Items */}
       <Stack spacing={2} flex={1}>
         {data.map((item) => (

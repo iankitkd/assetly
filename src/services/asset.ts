@@ -79,7 +79,7 @@ export const searchAssets = async ({
   const skip = page ? (page - 1) * PAGE_SIZE : 0;
 
   // QUERY
-  const [assets, total] = await prisma.$transaction([
+  const [assets, total] = await Promise.all([
     prisma.asset.findMany({
       where,
       orderBy,

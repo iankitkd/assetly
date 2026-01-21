@@ -73,7 +73,8 @@ export default function LoginForm() {
       showSocials={true}
       backButtonLabel="Sign up"
       backButtonDescription="Don't have an account?"
-      backButtonHref="/signup"
+      backButtonHref={callbackUrl ? `/signup?callbackUrl=${encodeURIComponent(callbackUrl)}` : `/signup`}
+      dataTestid="login-page"
     >
       {/* Email Password Form */}
       <Box component="form" onSubmit={handleSubmit(loginHandler)}>

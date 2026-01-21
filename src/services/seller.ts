@@ -9,7 +9,7 @@ export async function getSellerAssets(
 ) {
   const skip = (page - 1) * PAGE_SIZE;
 
-  const [assets, total] = await prisma.$transaction([
+  const [assets, total] = await Promise.all([
     prisma.asset.findMany({
       where: { sellerId },
       orderBy: { createdAt: "desc" },

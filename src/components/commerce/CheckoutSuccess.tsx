@@ -16,6 +16,7 @@ export default function CheckoutSuccess() {
         textAlign: "center",
         boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
       }}
+      data-testid='checkout-success-page'
     >
       <Stack spacing={3} alignItems="center">
         <CheckCircleRoundedIcon

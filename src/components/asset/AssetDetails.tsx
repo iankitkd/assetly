@@ -19,6 +19,7 @@ import { useState } from "react";
 import { addToGuestCart, isInGuestCart } from "@/utils/cartStorage";
 import { useCartStore } from "@/store/cartStore";
 import { createPurchaseForFreeItem } from "@/actions/purchase";
+import AddToCartButton from "@/components/asset/AddToCartButton";
 
 type Props = {
   asset: any;
@@ -95,7 +96,7 @@ export default function AssetDetails({
   }
 
   return (
-    <Box maxWidth="xl" sx={{ mx: "auto", py: 5, px: 2 }}>
+    <Box maxWidth="xl" sx={{ mx: "auto", py: 5, px: 2 }} data-testid="asset-details">
       <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
         {/* Preview */}
         <Paper sx={{ flex: 1, borderRadius: 3, overflow: "hidden" }}>
@@ -146,7 +147,7 @@ export default function AssetDetails({
 
           {(!canDownload && (asset.price > 0 ? (
             <Stack spacing={1.5}>
-              <Button
+              {/* <Button
                 size="large"
                 fullWidth
                 variant="contained"
@@ -154,7 +155,12 @@ export default function AssetDetails({
                 onClick={addToCartHandler}
               >
                 {isInCartStatus ? "Go to Cart" : "Add to Cart"}
-              </Button>
+              </Button> */}
+              
+              <AddToCartButton 
+                onAdd={addToCartHandler} 
+                isInCartStatus={isInCartStatus} 
+              />
 
               <Button
                 size="large"

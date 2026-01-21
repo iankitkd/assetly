@@ -32,6 +32,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
         underline="none"
         color="text.primary"
         sx={{ display: "block" }}
+        data-testid="asset-card"
       >
         <CardMedia
           component="img"

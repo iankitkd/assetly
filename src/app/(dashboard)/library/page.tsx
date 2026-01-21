@@ -17,7 +17,7 @@ export default async function LibraryPage(props : {searchParams: SearchParams}) 
   }
 
   return (
-    <Box>
+    <Box data-testid='library-page'>
       <Typography variant="h5" fontWeight={600} mb={4}>
         Your Library
       </Typography>

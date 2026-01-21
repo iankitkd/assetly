@@ -9,7 +9,7 @@ export const getUserLibrary = async (
 ) => {
   const skip = (page - 1) * take;
 
-  const [purchases, total] = await prisma.$transaction([
+  const [purchases, total] = await Promise.all([
     prisma.purchase.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },

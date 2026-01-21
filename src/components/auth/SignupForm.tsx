@@ -84,10 +84,10 @@ export default function SignupForm() {
       showSocials={true}
       backButtonLabel="Sign in"
       backButtonDescription="Already have an account?"
-      backButtonHref="/login"
+      backButtonHref={callbackUrl ? `/login?callbackUrl=${encodeURIComponent(callbackUrl)}` : `/login`}
     >
       {/* Email Password Form */}
-      <Box component="form" onSubmit={handleSubmit(signupHandler)}>
+      <Box component="form" onSubmit={handleSubmit(signupHandler)} data-testid="signup-form">
         {/* Role selection */}
         <Grid container spacing={2} mb={1}>
           {roles.map((item) => (

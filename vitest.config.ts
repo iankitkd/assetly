@@ -12,6 +12,8 @@ export default defineConfig({
       reporter: ["text", "html"],
       provider: "v8",
     },
+    include: ["src/__tests__/**/*.{test,spec}.ts"],
+    exclude: ["./tests/e2e/**", "./playwright/**"],
   },
   resolve: {
     alias: {

@@ -51,6 +51,7 @@ export default function Checkout({ total, assetId }: { total: number, assetId?: 
         textAlign: "center",
         boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
       }}
+      data-testid="checkout-page"
     >
       <Stack spacing={3}>
         <Typography variant="h6" fontWeight={700}>

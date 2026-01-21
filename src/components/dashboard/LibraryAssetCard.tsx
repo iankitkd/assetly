@@ -55,6 +55,7 @@ export default function LibraryAssetCard({ asset, purchasedAt }: Props) {
           boxShadow: 2,
         },
       }}
+      data-testid="library-asset"
     >
       <MuiLink
         component={NextLink}

@@ -11,6 +11,7 @@ interface AuthFormWrapperProps {
   backButtonLabel?: string;
   backButtonDescription?: string;
   backButtonHref?: string;
+  dataTestid?: string;
 }
 
 export default function AuthFormWrapper({
@@ -21,6 +22,7 @@ export default function AuthFormWrapper({
   backButtonDescription,
   backButtonHref,
   showSocials = false,
+  dataTestid,
 }: AuthFormWrapperProps) {
   return (
     <Paper
@@ -36,6 +38,7 @@ export default function AuthFormWrapper({
         border: "1px solid",
         borderColor: "divider",
       }}
+      data-testid={dataTestid}
     >
       {/* title */}
       <Typography variant="h5" fontWeight={700} textAlign="center" gutterBottom>
