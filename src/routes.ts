@@ -11,6 +11,7 @@ export const publicRoutes = [
   "/signup",
   "/assets",
   "/cart",
+  "/health",
 ];
 
 export const protectedRoutes = [
