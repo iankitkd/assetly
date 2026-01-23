@@ -3,6 +3,7 @@
 import { signIn } from "@/auth";
 import { loginSchema, LoginValues } from "@/lib/validators";
 import { AuthError } from "next-auth";
+import * as Sentry from "@sentry/nextjs";
 
 export const login = async (values: LoginValues) => {
   try {
@@ -22,6 +23,12 @@ export const login = async (values: LoginValues) => {
     return { success: true, message: "Signed in successfully!" };
 
   } catch (error) {
+    if (!(error instanceof AuthError)) {
+      Sentry.captureException(error, {
+        tags: { feature: "auth" },
+      });
+    }
+
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
@@ -30,6 +37,6 @@ export const login = async (values: LoginValues) => {
           return { success: false, message: "Something went wrong!" };
       }
     }
-    return { success: false, message: "Something went wrong", error: error };
+    return { success: false, message: "Something went wrong" };
   }
 };

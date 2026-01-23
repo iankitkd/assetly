@@ -4,6 +4,7 @@ import { signIn } from "@/auth";
 import { createUser, getUserByEmail } from "@/services/user";
 import { signupSchema, SignupValues } from "@/lib/validators";
 import { hashPassword } from "@/lib/password";
+import * as Sentry from "@sentry/nextjs";
 
 export const signup = async (values: SignupValues) => {
   try {
@@ -32,6 +33,10 @@ export const signup = async (values: SignupValues) => {
     return { success: true, message: "User created successfully!" };
 
   } catch (error) {
+    Sentry.captureException(error, {
+      tags: { feature: "auth" },
+    });
+    
     return { success: false, message: "Something went wrong", error: error };
   }
 };

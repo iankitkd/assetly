@@ -3,71 +3,84 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
+import * as Sentry from "@sentry/nextjs";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
-export async function createCheckoutSession(assetIds : string[]) {
+export async function createCheckoutSession(assetIds: string[]) {
   const session = await auth();
   if (!session?.user) throw new Error("Unauthorized");
 
-  const assets = await prisma.asset.findMany({
-    where: {id: {in: assetIds}},
-    select: {
-      id: true,
-      title: true,
-      price: true,
-      previewUrl: true,
-    }
-  });
-
-  if (!assets.length) throw new Error("No assets");
-
-  const total = assets.reduce((sum, i) => sum + i.price, 0);
-
-  // 1️. Create Order
-  const order = await prisma.order.create({
-    data: {
-      userId: session.user.id,
-      totalAmount: total,
-      status: "PENDING",
-      items: {
-        create: assets.map((item) => ({
-          assetId: item.id,
-          price: item.price,
-        })),
+  try {
+    const assets = await prisma.asset.findMany({
+      where: { id: { in: assetIds } },
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        previewUrl: true,
       },
-    },
-  });
+    });
 
-  // 2️. Create Stripe Checkout Session
-  const checkoutSession = await stripe.checkout.sessions.create({
-    mode: "payment",
-    payment_method_types: ["card"],
-    line_items: assets.map((item) => ({
-      price_data: {
-        currency: "inr",
-        product_data: { name: item.title, images: [item.previewUrl] },
-        unit_amount: item.price * 100,
+    if (!assets.length) throw new Error("No assets");
+
+    const total = assets.reduce((sum, i) => sum + i.price, 0);
+
+    // 1️. Create Order
+    const order = await prisma.order.create({
+      data: {
+        userId: session.user.id,
+        totalAmount: total,
+        status: "PENDING",
+        items: {
+          create: assets.map((item) => ({
+            assetId: item.id,
+            price: item.price,
+          })),
+        },
       },
-      quantity: 1,
-    })),
-    metadata: {
-      orderId: order.id,
-      userId: session.user.id,
-    },
-    client_reference_id: session.user.id,
-    customer_email: session.user.email ?? undefined,
-    success_url: `${APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${APP_URL}/cart`,
-  });
+    });
 
-  // 3️. Store Stripe Session ID
-  await prisma.order.update({
-    where: { id: order.id },
-    data: { stripeSession: checkoutSession.id },
-  });
+    // 2️. Create Stripe Checkout Session
+    const checkoutSession = await stripe.checkout.sessions.create({
+      mode: "payment",
+      payment_method_types: ["card"],
+      line_items: assets.map((item) => ({
+        price_data: {
+          currency: "inr",
+          product_data: { name: item.title, images: [item.previewUrl] },
+          unit_amount: item.price * 100,
+        },
+        quantity: 1,
+      })),
+      metadata: {
+        orderId: order.id,
+        userId: session.user.id,
+      },
+      client_reference_id: session.user.id,
+      customer_email: session.user.email ?? undefined,
+      success_url: `${APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${APP_URL}/cart`,
+    });
 
-  return checkoutSession.url;
+    // 3️. Store Stripe Session ID
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { stripeSession: checkoutSession.id },
+    });
+
+    return checkoutSession.url;
+  } catch (error) {
+    Sentry.captureException(error, {
+      tags: { feature: "checkout", },
+      extra: {
+        assetIds,
+        userId: session.user.id,
+      },
+    });
+
+    throw error;
+  }
 }
 
 export async function createCheckoutSessionForCart() {
