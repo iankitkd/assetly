@@ -10,17 +10,20 @@ Built with a scalable, production-ready architecture supporting secure authentic
 ## ✨ Features
 
 - 🔐 **Authentication & Authorization**
-  - Secure login with **NextAuth (Auth.js v5)**
-  - Prisma adapter for database-backed sessions
+  - Secure authentication with **NextAuth (Auth.js v5)**
+  - Protected routes for checkout, dashboard, and seller actions
   - Role-based access (Buyer / Seller)
+  <!-- - Prisma adapter for database-backed sessions -->
 
 - 🛒 **Asset Marketplace**
   - Browse, purchase, and download digital assets
   - Free and paid asset support
-  - Cart and Buy Now flows
+  - Add assets to cart or purchase directly
+  <!-- - Cart and Buy Now flows -->
 
 - 💳 **Payments**
   - Stripe integration for secure checkout
+  - Order is finalized only after successful payment
   - Order lifecycle: `PENDING -> PAID`
   <!-- - Purchase history and receipts -->
 
@@ -38,6 +41,15 @@ Built with a scalable, production-ready architecture supporting secure authentic
   - Zustand for global state management
   - Zod for schema validation
   - React Hook Form for forms -->
+
+---
+
+## 🛡️ Testing & Observability
+
+- Unit & service tests using Vitest
+- Full end-to-end testing with Playwright (purchase flow)
+- CI-based regression testing via GitHub Actions
+- Production error monitoring and observability using Sentry
 
 ---
 
@@ -59,6 +71,17 @@ Built with a scalable, production-ready architecture supporting secure authentic
 ### Auth & Payments
 - **NextAuth (Auth.js v5)**
 - **Stripe**
+
+### Testing
+- **Vitest**
+- **Playwright**
+
+### Monitoring
+- **Sentry**
+
+### DevOps & Deployment
+- **GitHub Actions**
+- **Vercel**
 
 ---
 
